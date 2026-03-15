@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Dashboard Gestor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --background:0 0% 97%;--foreground:0 0% 9%;--card:0 0% 100%;--primary:0 0% 18%;
+  --primary-fg:0 0% 98%;--muted:0 0% 96%;--muted-fg:0 0% 45%;--accent:33 60% 50%;
+  --border:0 0% 83%;--ring:33 60% 50%;--radius:0.375rem;
+  --success:142 71% 45%;--success-bg:142 77% 97%;--success-border:142 60% 75%;--success-fg:142 71% 25%;
+  --warning:38 92% 50%;--warning-bg:48 100% 96%;--warning-border:38 80% 68%;--warning-fg:33 88% 28%;
+  --error:0 84% 60%;--error-bg:0 100% 97%;--error-border:0 84% 75%;--error-fg:0 72% 35%;
+  --info:199 89% 48%;--info-bg:204 100% 97%;--info-border:199 80% 72%;--info-fg:199 89% 26%;
+  --sb-bg:0 0% 11%;--sb-fg:0 0% 95%;--sb-muted:0 0% 40%;--sb-border:0 0% 17%;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --sh-xs:0 1px 2px 0 rgb(0 0 0/.05);
+  --sh-sm:0 1px 3px 0 rgb(0 0 0/.07),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-md:0 4px 6px -1px rgb(0 0 0/.07),0 2px 4px -2px rgb(0 0 0/.04);
+  --sh-lg:0 10px 15px -3px rgb(0 0 0/.08),0 4px 6px -4px rgb(0 0 0/.05);
+  --sh-focus:0 0 0 3px hsl(33 60% 50%/.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:hsl(var(--foreground));background:hsl(var(--background));display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+*{scrollbar-width:thin;scrollbar-color:hsl(var(--border)) transparent;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:4px;}
+
+/* ── Button ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:500;line-height:1;cursor:pointer;border:none;transition:all 150ms;white-space:nowrap;text-decoration:none;outline:none;font-family:var(--font-sans);}
+.btn:focus-visible{box-shadow:var(--sh-focus);}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+.btn-md{height:34px;padding:0 14px;}
+.btn-icon{width:30px;height:30px;padding:0;flex-shrink:0;}
+.btn-icon-sm{width:26px;height:26px;padding:0;flex-shrink:0;border-radius:calc(var(--radius) - 1px);}
+.btn-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.btn-default:hover{background:hsl(0 0% 23%);}
+.btn-outline{background:transparent;color:hsl(var(--foreground));border:1px solid hsl(var(--border));}
+.btn-outline:hover{background:hsl(var(--muted));}
+.btn-ghost{background:transparent;color:hsl(var(--muted-fg));border:none;}
+.btn-ghost:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
+.btn-link{background:transparent;border:none;color:hsl(var(--accent));padding:0;height:auto;font-size:12px;font-weight:500;}
+.btn-link:hover{opacity:.75;text-decoration:underline;}
+
+/* ── Badge ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;line-height:1;white-space:nowrap;}
+.badge-pill{padding:3px 9px;border-radius:9999px;}
+.badge-tag{padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;letter-spacing:.02em;}
+.badge-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));}
+.badge-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.badge-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+.badge-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));}
+.badge-info{background:hsl(var(--info-bg));color:hsl(var(--info-fg));border:1px solid hsl(var(--info-border));}
+.badge-accent{background:hsl(33 60% 50%/.12);color:hsl(var(--accent));border:1px solid hsl(33 60% 50%/.28);}
+.badge-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.badge-muted{background:hsl(var(--muted));color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));}
+
+/* ── Card ── */
+.card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);box-shadow:var(--sh-sm);overflow:hidden;}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid hsl(var(--border));}
+.card-title{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:hsl(var(--foreground));}
+.card-dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--accent));flex-shrink:0;}
+
+/* ── Avatar ── */
+.avatar{border-radius:9999px;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;flex-shrink:0;}
+.avatar-xs{width:20px;height:20px;font-size:8px;}
+.avatar-sm{width:28px;height:28px;font-size:10px;}
+.avatar-md{width:34px;height:34px;font-size:12px;}
+.avatar-lg{width:40px;height:40px;font-size:14px;}
+.av-rf{background:linear-gradient(135deg,hsl(var(--accent)) 0%,hsl(30 55% 35%) 100%);}
+.av-mb{background:linear-gradient(135deg,hsl(199 89% 48%) 0%,hsl(199 89% 30%) 100%);}
+.av-ca{background:linear-gradient(135deg,hsl(142 71% 45%) 0%,hsl(142 71% 28%) 100%);}
+.av-jp{background:linear-gradient(135deg,hsl(270 60% 55%) 0%,hsl(270 60% 35%) 100%);}
+.av-ls{background:linear-gradient(135deg,hsl(0 0% 45%) 0%,hsl(0 0% 28%) 100%);}
+
+/* ══════════ SIDEBAR ══════════ */
+.sidebar{width:220px;min-height:100vh;flex-shrink:0;background:hsl(var(--sb-bg));display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,hsl(33 60% 50%/.14) 0%,transparent 70%);pointer-events:none;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 16px 14px;border-bottom:1px solid hsl(var(--sb-border));cursor:pointer;}
+.logo-orb{width:30px;height:30px;border-radius:50%;background:hsl(var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+.logo-orb::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:hsl(var(--sb-bg));}
+.logo-name{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;color:hsl(var(--sb-fg));}
+.logo-sub{display:block;font-size:8.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:hsl(var(--accent));margin-top:2px;}
+.nav-sec{padding:12px 10px 6px;}
+.nav-label{padding:0 8px;margin-bottom:4px;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:hsl(var(--sb-muted));}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:calc(var(--radius) - 1px);color:hsl(0 0% 58%);font-size:13px;font-weight:450;cursor:pointer;transition:background 150ms,color 150ms;text-decoration:none;}
+.nav-item:hover{background:hsl(0 0% 100%/.05);color:hsl(var(--sb-fg));}
+.nav-item.active{background:hsl(33 60% 50%/.13);color:hsl(var(--accent));}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.7;}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-badge{min-width:18px;height:18px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;padding:0 5px;background:hsl(var(--error));color:white;margin-left:auto;}
+.nav-badge.am{background:hsl(var(--accent));}
+.sb-sep{height:1px;background:hsl(var(--sb-border));margin:6px 16px;}
+.sb-spacer{flex:1;}
+.sb-footer{padding:10px;border-top:1px solid hsl(var(--sb-border));}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:calc(var(--radius) - 1px);cursor:pointer;transition:background 150ms;}
+.user-row:hover{background:hsl(0 0% 100%/.05);}
+.user-name{font-size:12px;font-weight:600;color:hsl(var(--sb-fg));}
+.user-role{font-size:10px;color:hsl(var(--sb-muted));margin-top:1px;}
+
+/* ══════════ MAIN ══════════ */
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
+
+/* Topbar */
+.topbar{height:48px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.topbar-left{flex:1;display:flex;align-items:center;gap:10px;}
+.topbar-greeting{font-family:var(--font-serif);font-size:16px;color:hsl(var(--foreground));letter-spacing:-.01em;}
+.topbar-greeting span{color:hsl(var(--accent));}
+.role-badge{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--accent));background:hsl(33 60% 50%/.1);border:1px solid hsl(33 60% 50%/.25);padding:3px 8px;border-radius:9999px;}
+
+/* Period selector */
+.period-selector{display:flex;align-items:center;gap:2px;background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius);padding:2px;}
+.period-btn{padding:4px 11px;border-radius:calc(var(--radius) - 2px);font-size:11.5px;font-weight:500;color:hsl(var(--muted-fg));cursor:pointer;transition:all 150ms;border:none;background:transparent;font-family:var(--font-sans);}
+.period-btn.active{background:hsl(var(--card));color:hsl(var(--foreground));box-shadow:var(--sh-xs);}
+.period-btn:hover:not(.active){color:hsl(var(--foreground));}
+
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:hsl(var(--success-fg));background:hsl(var(--success-bg));border:1px solid hsl(var(--success-border));padding:3px 9px;border-radius:9999px;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--success));animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Content */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px 32px;display:flex;flex-direction:column;gap:14px;}
+
+/* ══════════ KPI ROW ══════════ */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.kpi-card{
+  background:hsl(var(--card));border:1px solid hsl(var(--border));
+  border-radius:var(--radius);padding:14px 16px;
+  box-shadow:var(--sh-xs);position:relative;overflow:hidden;
+  transition:box-shadow 150ms;
+  animation:fadeUp .35s ease both;
+}
+.kpi-card:hover{box-shadow:var(--sh-sm);}
+.kpi-card:nth-child(1){animation-delay:.04s}
+.kpi-card:nth-child(2){animation-delay:.08s}
+.kpi-card:nth-child(3){animation-delay:.12s}
+.kpi-card:nth-child(4){animation-delay:.16s}
+.kpi-card:nth-child(5){animation-delay:.20s}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;}
+.kpi-card.c-brand::after{background:hsl(var(--accent));}
+.kpi-card.c-error::after{background:hsl(var(--error));}
+.kpi-card.c-success::after{background:hsl(var(--success));}
+.kpi-card.c-warning::after{background:hsl(var(--warning));}
+.kpi-card.c-info::after{background:hsl(var(--info));}
+.kpi-label{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.kpi-value{font-family:var(--font-serif);font-size:30px;line-height:1;color:hsl(var(--foreground));margin-bottom:6px;font-variant-numeric:tabular-nums;}
+.kpi-card.c-error .kpi-value{color:hsl(var(--error));}
+.kpi-delta{display:flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;}
+.delta-up{color:hsl(var(--success-fg));}
+.delta-down{color:hsl(var(--error-fg));}
+.delta-neutral{color:hsl(var(--muted-fg));}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ══════════ ALERT BANNER ══════════ */
+.alert-banner{display:flex;align-items:center;gap:12px;padding:11px 14px;background:hsl(var(--error-bg));border:1px solid hsl(var(--error-border));border-left:3px solid hsl(var(--error));border-radius:var(--radius);animation:fadeIn .2s ease;}
+.alert-icon{color:hsl(var(--error-fg));flex-shrink:0;}
+.alert-body{flex:1;min-width:0;}
+.alert-title{font-size:13px;font-weight:600;color:hsl(var(--error-fg));margin-bottom:2px;}
+.alert-sub{font-size:11.5px;color:hsl(var(--error-fg));opacity:.75;}
+.alert-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+/* ══════════ MAIN GRID ══════════ */
+.main-grid{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start;}
+
+/* ── Processos Críticos ── */
+.crit-filters{display:flex;gap:4px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid hsl(var(--border));}
+.fchip{display:inline-flex;align-items:center;padding:4px 11px;border-radius:9999px;font-size:12px;font-weight:500;color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));cursor:pointer;transition:all 150ms;background:transparent;font-family:var(--font-sans);}
+.fchip:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
+.fchip.active{background:hsl(var(--primary));color:hsl(var(--primary-fg));border-color:hsl(var(--primary));}
+
+.crit-table{width:100%;}
+.crit-row{display:grid;grid-template-columns:1fr 90px 110px 90px 80px;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid hsl(var(--border));transition:background 120ms;}
+.crit-row:last-child{border-bottom:none;}
+.crit-row:hover{background:hsl(var(--muted)/.5);}
+.crit-row.header{padding:7px 16px;background:hsl(var(--muted)/.6);}
+.crit-th{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));}
+.crit-proc-name{font-size:13px;font-weight:500;color:hsl(var(--foreground));margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.crit-proc-cnj{font-size:11px;color:hsl(var(--muted-fg));font-family:var(--font-mono);}
+.crit-resp{display:flex;align-items:center;gap:6px;}
+.crit-resp-name{font-size:12px;color:hsl(var(--foreground));font-weight:500;}
+.crit-actions{display:flex;align-items:center;gap:4px;justify-content:flex-end;}
+
+/* ── Carga da equipe ── */
+.team-list{display:flex;flex-direction:column;}
+.team-row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid hsl(var(--border));transition:background 120ms;cursor:pointer;}
+.team-row:last-child{border-bottom:none;}
+.team-row:hover{background:hsl(var(--muted)/.5);}
+.team-row.me{background:hsl(33 60% 50%/.05);}
+.team-info{flex:1;min-width:0;}
+.team-name{font-size:13px;font-weight:600;color:hsl(var(--foreground));display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.team-meta{font-size:11px;color:hsl(var(--muted-fg));}
+.team-stats{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.team-count{font-size:12px;font-weight:600;color:hsl(var(--foreground));font-variant-numeric:tabular-nums;}
+.progress-wrap{width:80px;}
+.progress-bar{height:5px;border-radius:9999px;background:hsl(var(--muted));overflow:hidden;border:1px solid hsl(var(--border));}
+.progress-fill{height:100%;border-radius:9999px;transition:width .6s ease;}
+.pf-ok{background:hsl(var(--success));}
+.pf-warn{background:hsl(var(--warning));}
+.pf-err{background:hsl(var(--error));}
+.team-cumprimento{font-size:10.5px;font-weight:600;color:hsl(var(--muted-fg));}
+.team-cumprimento.good{color:hsl(var(--success-fg));}
+.team-cumprimento.bad{color:hsl(var(--error-fg));}
+
+/* ══════════ GRÁFICO ══════════ */
+.chart-wrap{padding:16px 16px 8px;overflow:hidden;}
+.chart-legend{display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:hsl(var(--muted-fg));}
+.legend-dot{width:10px;height:3px;border-radius:9999px;}
+.ld-abertos{background:hsl(var(--accent));}
+.ld-encerrados{background:hsl(var(--success));}
+.ld-cumpridos{background:hsl(var(--info));}
+.chart-svg-wrap{position:relative;}
+.chart-axis-label{font-size:10px;fill:hsl(var(--muted-fg));font-family:'Inter',sans-serif;}
+.chart-tooltip{
+  position:absolute;background:hsl(var(--card));border:1px solid hsl(var(--border));
+  border-radius:var(--radius);padding:8px 10px;box-shadow:var(--sh-md);
+  font-size:11.5px;pointer-events:none;opacity:0;transition:opacity .15s;
+  min-width:120px;
+}
+.chart-tooltip.visible{opacity:1;}
+.ct-month{font-weight:600;color:hsl(var(--foreground));margin-bottom:5px;font-size:12px;}
+.ct-row{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.ct-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ══════════ MODAL ══════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1050;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:hsl(var(--card));border-radius:calc(var(--radius) * 2);box-shadow:var(--sh-lg);width:440px;max-width:calc(100vw - 32px);transform:translateY(8px);transition:transform .2s;overflow:hidden;}
+.modal-overlay.open .modal{transform:none;}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid hsl(var(--border));}
+.modal-title{font-size:15px;font-weight:600;color:hsl(var(--foreground));margin-bottom:3px;}
+.modal-sub{font-size:12px;color:hsl(var(--muted-fg));}
+.modal-body{padding:16px 20px;}
+.modal-label{font-size:11.5px;font-weight:600;color:hsl(var(--muted-fg));letter-spacing:.04em;margin-bottom:6px;}
+.modal-process-info{background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius);padding:10px 12px;margin-bottom:14px;}
+.mpi-name{font-size:13px;font-weight:600;color:hsl(var(--foreground));margin-bottom:3px;}
+.mpi-meta{font-size:11.5px;color:hsl(var(--muted-fg));font-family:var(--font-mono);}
+.modal-section-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:8px;}
+.advogado-list{display:flex;flex-direction:column;gap:4px;margin-bottom:16px;}
+.adv-option{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--radius);border:1px solid hsl(var(--border));cursor:pointer;transition:all 150ms;background:transparent;}
+.adv-option:hover{background:hsl(var(--muted));border-color:hsl(var(--border));}
+.adv-option.selected{background:hsl(33 60% 50%/.08);border-color:hsl(33 60% 50%/.4);}
+.adv-option-info{flex:1;min-width:0;}
+.adv-option-name{font-size:13px;font-weight:500;color:hsl(var(--foreground));}
+.adv-option-load{font-size:11px;color:hsl(var(--muted-fg));}
+.adv-check{width:16px;height:16px;border-radius:50%;border:2px solid hsl(var(--border));flex-shrink:0;transition:all 150ms;}
+.adv-option.selected .adv-check{background:hsl(var(--accent));border-color:hsl(var(--accent));display:flex;align-items:center;justify-content:center;}
+.modal-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid hsl(var(--border));background:hsl(var(--muted)/.4);}
+.modal-note{font-size:11.5px;color:hsl(var(--muted-fg));}
+
+svg{display:block;}
+:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-orb"></div>
+    <div><span class="logo-name">LEXIS</span><span class="logo-sub">Escritório Digital</span></div>
+  </div>
+  <nav class="nav-sec">
+    <p class="nav-label">Principal</p>
+    <a class="nav-item active" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6L7.5 1.5 13.5 6V13A.5.5 0 0113 13.5H9.5V10H5.5V13.5H2A.5.5 0 011.5 13V6Z"/></svg>
+      Início
+    </a>
+    <a class="nav-item" href="processo-detalhe.html">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="12" height="12" rx="1.5"/><path d="M4.5 7.5h6M4.5 5h3M4.5 10h4.5"/></svg>
+      Processos
+      <span class="nav-badge am">147</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4.5V8l2 2"/></svg>
+      Prazos
+      <span class="nav-badge">11</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2H13.5l-1-2z"/><path d="M5.5 13.5h4"/></svg>
+      Intimações
+      <span class="nav-badge">23</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="12" height="11" rx="1.5"/><path d="M4.5 1.5v2M10.5 1.5v2M1.5 6.5h12"/></svg>
+      Agenda
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h10M2.5 7.5H9M2.5 11h5"/></svg>
+      Tarefas
+      <span class="nav-badge am">8</span>
+    </a>
+  </nav>
+  <div class="sb-sep"></div>
+  <nav class="nav-sec">
+    <p class="nav-label">Gestão</p>
+    <a class="nav-item" href="equipe-gestao.html">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="4.5" r="2"/><circle cx="10.5" cy="4.5" r="2"/><path d="M1.5 13c0-2.2 1.8-4 4-4s4 1.8 4 4"/><path d="M10.5 9c1.4 0 3 .9 3 4"/></svg>
+      Equipe
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 11.5V4a1 1 0 011-1h2a1 1 0 011 1v7.5"/><path d="M8.5 11.5V7a1 1 0 011-1h2a1 1 0 011 1v4.5"/><path d="M1.5 11.5h12"/></svg>
+      Relatórios
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 2v2M7.5 11v2M2 7.5h2M11 7.5h2"/><circle cx="7.5" cy="7.5" r="2.5"/></svg>
+      Configurações
+    </a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-footer">
+    <div class="user-row">
+      <div class="avatar avatar-sm av-rf">RF</div>
+      <div>
+        <p class="user-name">Dr. Rafael Fontes</p>
+        <p class="user-role">Sócio Gestor · OAB/SP 123.456</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <p class="topbar-greeting">Bom dia, <span>Rafael</span></p>
+      <span class="role-badge">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="3" r="1.5"/><path d="M1.5 9c0-1.9 1.6-3.5 3.5-3.5s3.5 1.6 3.5 3.5"/><path d="M7 5.5c1 .2 2 1 2 3.5"/></svg>
+        Gestor
+      </span>
+    </div>
+    <div class="period-selector">
+      <button class="period-btn" onclick="setPeriod(this)">Semana</button>
+      <button class="period-btn active" onclick="setPeriod(this)">Mês</button>
+      <button class="period-btn" onclick="setPeriod(this)">Trimestre</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="sync-pill"><span class="sync-dot"></span>Todos os tribunais · há 8 min</div>
+      <button class="btn btn-ghost btn-icon" aria-label="Notificações" style="position:relative;">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5a5 5 0 00-5 5v2.5l-1 1.5h12l-1-1.5V6.5a5 5 0 00-5-5z"/><path d="M6 12.5a1.5 1.5 0 003 0"/></svg>
+        <span style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:hsl(var(--error));border:1.5px solid hsl(var(--card));"></span>
+      </button>
+      <div class="avatar avatar-md av-rf" style="cursor:pointer;">RF</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+
+      <div class="kpi-card c-brand">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="10" height="10" rx="1.5"/><path d="M3.5 6h5M3.5 4h2.5M3.5 8h3.5"/></svg>
+          Processos Ativos
+        </div>
+        <div class="kpi-value">147</div>
+        <div class="kpi-delta delta-up">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5V2.5M2.5 5.5l3-3 3 3"/></svg>
+          +12 vs mês anterior
+        </div>
+      </div>
+
+      <div class="kpi-card c-error">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1.5L11 10.5H1L6 1.5z"/><path d="M6 5v2.5"/></svg>
+          Prazos Vencendo Hoje
+        </div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-delta delta-down">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 2.5v6M2.5 5.5l3 3 3-3"/></svg>
+          2 sem responsável
+        </div>
+      </div>
+
+      <div class="kpi-card c-success">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="5"/><path d="M3.5 6.5l2 2 3-4"/></svg>
+          Cumpridos no Mês
+        </div>
+        <div class="kpi-value">38</div>
+        <div class="kpi-delta delta-up">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5V2.5M2.5 5.5l3-3 3 3"/></svg>
+          94% taxa de cumprimento
+        </div>
+      </div>
+
+      <div class="kpi-card c-warning">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="8" r="1" fill="currentColor" stroke="none"/><path d="M6 1v5"/><circle cx="6" cy="6" r="5"/></svg>
+          Sem Responsável
+        </div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-delta delta-down">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 2.5v6M2.5 5.5l3 3 3-3"/></svg>
+          Ação necessária
+        </div>
+      </div>
+
+      <div class="kpi-card c-info">
+        <div class="kpi-label">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5V3a1 1 0 011-1h1.5a1 1 0 011 1v6.5"/><path d="M6.5 9.5V6a1 1 0 011-1H9a1 1 0 011 1v3.5"/><path d="M1 9.5h10"/></svg>
+          Processos em Risco
+        </div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-delta delta-neutral">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2.5 5.5h6"/></svg>
+          Igual ao mês anterior
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Alert Banner condicional -->
+    <div class="alert-banner" id="ab" role="alert">
+      <div class="alert-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 2.5L1.5 15.5h15L9 2.5z"/><path d="M9 8v4"/><circle cx="9" cy="13.5" r=".8" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="alert-body">
+        <p class="alert-title">2 processos com prazo hoje não têm responsável definido</p>
+        <p class="alert-sub">Industriex S/A · MedTech Brasil — atribuição necessária antes das 23:59</p>
+      </div>
+      <div class="alert-actions">
+        <button class="btn btn-danger btn-sm" onclick="openModal('industriex')" style="background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="5" cy="3.5" r="1.5"/><path d="M1.5 10c0-1.7 1.6-3 3.5-3"/><path d="M9 7v4M7 9h4"/></svg>
+          Atribuir agora
+        </button>
+        <button class="btn btn-ghost btn-icon-sm" onclick="document.getElementById('ab').remove()" title="Fechar">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l8 8M10 2L2 10"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- Processos Críticos -->
+      <div class="card" style="animation:fadeUp .3s ease .1s both;">
+        <div class="card-header">
+          <h2 class="card-title"><span class="card-dot"></span>Processos Críticos</h2>
+          <button class="btn btn-link">Ver todos →</button>
+        </div>
+        <div class="crit-filters">
+          <button class="fchip active" onclick="setFilter(this)">Todos (12)</button>
+          <button class="fchip" onclick="setFilter(this)">Hoje (7)</button>
+          <button class="fchip" onclick="setFilter(this)">Esta semana (5)</button>
+          <button class="fchip" onclick="setFilter(this)">Sem responsável (2)</button>
+        </div>
+        <div class="crit-table">
+          <div class="crit-row header">
+            <div class="crit-th">Processo</div>
+            <div class="crit-th">Prazo</div>
+            <div class="crit-th">Responsável</div>
+            <div class="crit-th">Tipo</div>
+            <div class="crit-th" style="text-align:right;">Ação</div>
+          </div>
+
+          <!-- Sem responsável — urgente -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">Industriex S/A × União Federal</p>
+              <p class="crit-proc-cnj">0009871-44.2024.4.03.6100</p>
+            </div>
+            <div><span class="badge badge-pill badge-error" style="font-size:10px;">Hoje</span></div>
+            <div class="crit-resp">
+              <span class="badge badge-tag badge-error" style="gap:3px;">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M1 7.5c0-1.4 1.3-2.5 3-2.5"/><path d="M6.5 5.5v3M5 7h3"/></svg>
+                Sem resp.
+              </span>
+            </div>
+            <div><span class="badge badge-tag badge-secondary">Contestação</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-outline btn-sm" onclick="openModal('industriex')" style="gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3" r="1.5"/><path d="M1 9c0-1.7 1.6-3 3.5-3"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+                Atribuir
+              </button>
+            </div>
+          </div>
+
+          <!-- Sem responsável — urgente -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">MedTech Brasil × Plano de Saúde</p>
+              <p class="crit-proc-cnj">0003241-18.2024.8.26.0100</p>
+            </div>
+            <div><span class="badge badge-pill badge-error" style="font-size:10px;">Hoje</span></div>
+            <div class="crit-resp">
+              <span class="badge badge-tag badge-error" style="gap:3px;">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M1 7.5c0-1.4 1.3-2.5 3-2.5"/><path d="M6.5 5.5v3M5 7h3"/></svg>
+                Sem resp.
+              </span>
+            </div>
+            <div><span class="badge badge-tag badge-secondary">Manifestação</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-outline btn-sm" onclick="openModal('medtech')" style="gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3" r="1.5"/><path d="M1 9c0-1.7 1.6-3 3.5-3"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+                Atribuir
+              </button>
+            </div>
+          </div>
+
+          <!-- Com responsável — urgente -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">Construtora Delta × Município SP</p>
+              <p class="crit-proc-cnj">0012340-77.2023.8.26.0053</p>
+            </div>
+            <div><span class="badge badge-pill badge-error" style="font-size:10px;">Hoje</span></div>
+            <div class="crit-resp">
+              <div class="avatar avatar-xs av-mb">MB</div>
+              <span class="crit-resp-name">M. Barros</span>
+            </div>
+            <div><span class="badge badge-tag badge-info">Recurso</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-ghost btn-sm">Ver</button>
+              <button class="btn btn-ghost btn-icon-sm" onclick="openModal('delta')" title="Reatribuir">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3" r="1.5"/><path d="M1 9c0-1.7 1.6-3 3.5-3"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Com responsável — atenção -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">Silva &amp; Construções × Banco Nacional</p>
+              <p class="crit-proc-cnj">0001234-56.2024.8.26.0100</p>
+            </div>
+            <div><span class="badge badge-pill badge-error" style="font-size:10px;">Hoje</span></div>
+            <div class="crit-resp">
+              <div class="avatar avatar-xs av-rf">RF</div>
+              <span class="crit-resp-name">R. Fontes</span>
+              <span class="badge badge-tag badge-accent" style="font-size:9.5px;">Você</span>
+            </div>
+            <div><span class="badge badge-tag badge-secondary">Contestação</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-ghost btn-sm">Ver</button>
+            </div>
+          </div>
+
+          <!-- Amanhã -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">TechPay Brasil × Banco do Investimento</p>
+              <p class="crit-proc-cnj">0007891-33.2024.8.26.0100</p>
+            </div>
+            <div><span class="badge badge-pill badge-warning" style="font-size:10px;">Amanhã</span></div>
+            <div class="crit-resp">
+              <div class="avatar avatar-xs av-ca">CA</div>
+              <span class="crit-resp-name">C. Alves</span>
+            </div>
+            <div><span class="badge badge-tag badge-secondary">Petição</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-ghost btn-sm">Ver</button>
+              <button class="btn btn-ghost btn-icon-sm" onclick="openModal('techpay')" title="Reatribuir">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3" r="1.5"/><path d="M1 9c0-1.7 1.6-3 3.5-3"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Semana -->
+          <div class="crit-row">
+            <div>
+              <p class="crit-proc-name">Farmacêutica Horizonte × ANVISA</p>
+              <p class="crit-proc-cnj">0004512-90.2024.4.01.3400</p>
+            </div>
+            <div><span class="badge badge-pill badge-warning" style="font-size:10px;">Em 3 dias</span></div>
+            <div class="crit-resp">
+              <div class="avatar avatar-xs av-jp">JP</div>
+              <span class="crit-resp-name">J. Prado</span>
+            </div>
+            <div><span class="badge badge-tag badge-info">Impugnação</span></div>
+            <div class="crit-actions">
+              <button class="btn btn-ghost btn-sm">Ver</button>
+              <button class="btn btn-ghost btn-icon-sm" onclick="openModal('farma')" title="Reatribuir">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3" r="1.5"/><path d="M1 9c0-1.7 1.6-3 3.5-3"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Carga da Equipe -->
+      <div class="card" style="animation:fadeUp .3s ease .15s both;">
+        <div class="card-header">
+          <h2 class="card-title"><span class="card-dot"></span>Carga da Equipe</h2>
+          <button class="btn btn-link">Gerenciar →</button>
+        </div>
+        <div class="team-list">
+
+          <!-- Advogado 1 — você (gestor) -->
+          <div class="team-row me">
+            <div class="avatar avatar-md av-rf">RF</div>
+            <div class="team-info">
+              <p class="team-name">
+                Dr. Rafael Fontes
+                <span class="badge badge-tag badge-accent" style="font-size:9.5px;">Você</span>
+              </p>
+              <p class="team-meta">47 processos · 3 prazos esta semana</p>
+            </div>
+            <div class="team-stats">
+              <span class="team-count">47 / 50</span>
+              <div class="progress-wrap">
+                <div class="progress-bar"><div class="progress-fill pf-warn" style="width:94%"></div></div>
+              </div>
+              <span class="team-cumprimento good">96% cump.</span>
+            </div>
+          </div>
+
+          <!-- Advogado 2 — sobrecarga -->
+          <div class="team-row">
+            <div class="avatar avatar-md av-mb">MB</div>
+            <div class="team-info">
+              <p class="team-name">
+                Dra. Marina Barros
+                <span class="badge badge-tag badge-error" style="font-size:9.5px;">Sobrecarga</span>
+              </p>
+              <p class="team-meta">58 processos · 5 prazos esta semana</p>
+            </div>
+            <div class="team-stats">
+              <span class="team-count" style="color:hsl(var(--error));">58 / 50</span>
+              <div class="progress-wrap">
+                <div class="progress-bar"><div class="progress-fill pf-err" style="width:100%"></div></div>
+              </div>
+              <span class="team-cumprimento bad">81% cump.</span>
+            </div>
+          </div>
+
+          <!-- Advogado 3 — ok -->
+          <div class="team-row">
+            <div class="avatar avatar-md av-ca">CA</div>
+            <div class="team-info">
+              <p class="team-name">Dr. Carlos Alves</p>
+              <p class="team-meta">32 processos · 2 prazos esta semana</p>
+            </div>
+            <div class="team-stats">
+              <span class="team-count">32 / 50</span>
+              <div class="progress-wrap">
+                <div class="progress-bar"><div class="progress-fill pf-ok" style="width:64%"></div></div>
+              </div>
+              <span class="team-cumprimento good">100% cump.</span>
+            </div>
+          </div>
+
+          <!-- Advogado 4 — ok -->
+          <div class="team-row">
+            <div class="avatar avatar-md av-jp">JP</div>
+            <div class="team-info">
+              <p class="team-name">Dra. Julia Prado</p>
+              <p class="team-meta">28 processos · 4 prazos esta semana</p>
+            </div>
+            <div class="team-stats">
+              <span class="team-count">28 / 50</span>
+              <div class="progress-wrap">
+                <div class="progress-bar"><div class="progress-fill pf-ok" style="width:56%"></div></div>
+              </div>
+              <span class="team-cumprimento good">98% cump.</span>
+            </div>
+          </div>
+
+          <!-- Advogado 5 — baixa carga, candidato para reatribuição -->
+          <div class="team-row">
+            <div class="avatar avatar-md av-ls">LS</div>
+            <div class="team-info">
+              <p class="team-name">Dr. Lucas Silva</p>
+              <p class="team-meta">18 processos · 1 prazo esta semana</p>
+            </div>
+            <div class="team-stats">
+              <span class="team-count">18 / 50</span>
+              <div class="progress-wrap">
+                <div class="progress-bar"><div class="progress-fill pf-ok" style="width:36%"></div></div>
+              </div>
+              <span class="team-cumprimento good">100% cump.</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /main-grid -->
+
+    <!-- Evolução Mensal -->
+    <div class="card" style="animation:fadeUp .3s ease .2s both;">
+      <div class="card-header">
+        <h2 class="card-title"><span class="card-dot"></span>Evolução da Carteira — Últimos 6 Meses</h2>
+        <button class="btn btn-outline btn-sm" style="gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9v1.5A1.5 1.5 0 003.5 12h5A1.5 1.5 0 0010 10.5V9"/><path d="M6 1v7M3.5 4l2.5-3 2.5 3"/></svg>
+          Exportar
+        </button>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot ld-abertos"></div>Processos abertos</div>
+          <div class="legend-item"><div class="legend-dot ld-encerrados"></div>Encerrados</div>
+          <div class="legend-item"><div class="legend-dot ld-cumpridos"></div>Prazos cumpridos</div>
+        </div>
+        <div class="chart-svg-wrap">
+          <div class="chart-tooltip" id="chart-tooltip"></div>
+          <svg id="chart-svg" width="100%" height="200" viewBox="0 0 780 200" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <line x1="60" y1="10" x2="760" y2="10" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="4,4"/>
+            <line x1="60" y1="50" x2="760" y2="50" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="4,4"/>
+            <line x1="60" y1="90" x2="760" y2="90" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="4,4"/>
+            <line x1="60" y1="130" x2="760" y2="130" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="4,4"/>
+            <line x1="60" y1="170" x2="760" y2="170" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="4,4"/>
+            <!-- Y axis labels -->
+            <text x="50" y="14" text-anchor="end" class="chart-axis-label">160</text>
+            <text x="50" y="54" text-anchor="end" class="chart-axis-label">120</text>
+            <text x="50" y="94" text-anchor="end" class="chart-axis-label">80</text>
+            <text x="50" y="134" text-anchor="end" class="chart-axis-label">40</text>
+            <text x="50" y="174" text-anchor="end" class="chart-axis-label">0</text>
+            <!-- X axis labels (months) -->
+            <text x="120" y="195" text-anchor="middle" class="chart-axis-label">Set/24</text>
+            <text x="240" y="195" text-anchor="middle" class="chart-axis-label">Out/24</text>
+            <text x="360" y="195" text-anchor="middle" class="chart-axis-label">Nov/24</text>
+            <text x="480" y="195" text-anchor="middle" class="chart-axis-label">Dez/24</text>
+            <text x="600" y="195" text-anchor="middle" class="chart-axis-label">Jan/25</text>
+            <text x="720" y="195" text-anchor="middle" class="chart-axis-label">Fev/25</text>
+
+            <!-- Processos abertos (accent #C4873D) — values: 118,125,131,138,142,147 -->
+            <!-- scale: (val/160)*160 = val → y = 170 - (val/160)*160 -->
+            <!-- 118→51.75, 125→47.8, 131→44.75, 138→41.25, 142→38.75, 147→36.25 mapped to h=160 -->
+            <defs>
+              <linearGradient id="grad-abertos" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="hsl(33,60%,50%)" stop-opacity=".15"/>
+                <stop offset="100%" stop-color="hsl(33,60%,50%)" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="grad-encerrados" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="hsl(142,71%,45%)" stop-opacity=".12"/>
+                <stop offset="100%" stop-color="hsl(142,71%,45%)" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="grad-cumpridos" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="hsl(199,89%,48%)" stop-opacity=".12"/>
+                <stop offset="100%" stop-color="hsl(199,89%,48%)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Fill areas -->
+            <!-- Abertos: 118→52,125→48,131→44,138→40,142→37,147→33 (y = 170 - val*160/160 = 170-val) -->
+            <path d="M120,52 L240,48 L360,44 L480,40 L600,37 L720,33 L720,170 L120,170 Z" fill="url(#grad-abertos)"/>
+            <!-- Encerrados: 12→158,18→152,22→148,31→139,29→141,38→132 -->
+            <path d="M120,158 L240,152 L360,148 L480,139 L600,141 L720,132 L720,170 L120,170 Z" fill="url(#grad-encerrados)"/>
+            <!-- Cumpridos: 28→142,35→135,40→130,44→126,40→130,38→132 -->
+            <path d="M120,142 L240,135 L360,130 L480,126 L600,130 L720,132 L720,170 L120,170 Z" fill="url(#grad-cumpridos)"/>
+
+            <!-- Lines -->
+            <polyline points="120,52 240,48 360,44 480,40 600,37 720,33" fill="none" stroke="hsl(33,60%,50%)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline points="120,158 240,152 360,148 480,139 600,141 720,132" fill="none" stroke="hsl(142,71%,45%)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline points="120,142 240,135 360,130 480,126 600,130 720,132" fill="none" stroke="hsl(199,89%,48%)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+
+            <!-- Dots — abertos -->
+            <g id="dots-abertos">
+              <circle cx="120" cy="52" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Set/24" data-a="118" data-e="12" data-c="28"/>
+              <circle cx="240" cy="48" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Out/24" data-a="125" data-e="18" data-c="35"/>
+              <circle cx="360" cy="44" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Nov/24" data-a="131" data-e="22" data-c="40"/>
+              <circle cx="480" cy="40" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Dez/24" data-a="138" data-e="31" data-c="44"/>
+              <circle cx="600" cy="37" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Jan/25" data-a="142" data-e="29" data-c="40"/>
+              <circle cx="720" cy="33" r="4" fill="hsl(var(--card))" stroke="hsl(33,60%,50%)" stroke-width="2" class="chart-dot" data-m="Fev/25" data-a="147" data-e="38" data-c="38"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- MODAL: Atribuir Responsável -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <div>
+        <p class="modal-title">Atribuir responsável</p>
+        <p class="modal-sub" id="modal-sub">Selecione um advogado para este processo</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-section-label">Processo</p>
+      <div class="modal-process-info">
+        <p class="mpi-name" id="modal-proc-name">Industriex S/A × União Federal</p>
+        <p class="mpi-meta" id="modal-proc-cnj">0009871-44.2024.4.03.6100 · Contestação · Vence hoje</p>
+      </div>
+      <p class="modal-section-label">Advogado responsável</p>
+      <div class="advogado-list" id="adv-list">
+        <div class="adv-option" onclick="selectAdv(this, 'rf')">
+          <div class="avatar avatar-sm av-rf">RF</div>
+          <div class="adv-option-info">
+            <p class="adv-option-name">Dr. Rafael Fontes <span class="badge badge-tag badge-accent" style="font-size:9.5px;margin-left:4px;">Você</span></p>
+            <p class="adv-option-load">47 processos · Carga: 94%</p>
+          </div>
+          <div class="adv-check"></div>
+        </div>
+        <div class="adv-option" onclick="selectAdv(this, 'mb')">
+          <div class="avatar avatar-sm av-mb">MB</div>
+          <div class="adv-option-info">
+            <p class="adv-option-name">Dra. Marina Barros <span class="badge badge-tag badge-error" style="font-size:9.5px;margin-left:4px;">Sobrecarga</span></p>
+            <p class="adv-option-load">58 processos · Carga: 116%</p>
+          </div>
+          <div class="adv-check"></div>
+        </div>
+        <div class="adv-option" onclick="selectAdv(this, 'ca')">
+          <div class="avatar avatar-sm av-ca">CA</div>
+          <div class="adv-option-info">
+            <p class="adv-option-name">Dr. Carlos Alves</p>
+            <p class="adv-option-load">32 processos · Carga: 64%</p>
+          </div>
+          <div class="adv-check"></div>
+        </div>
+        <div class="adv-option" onclick="selectAdv(this, 'jp')">
+          <div class="avatar avatar-sm av-jp">JP</div>
+          <div class="adv-option-info">
+            <p class="adv-option-name">Dra. Julia Prado</p>
+            <p class="adv-option-load">28 processos · Carga: 56%</p>
+          </div>
+          <div class="adv-check"></div>
+        </div>
+        <div class="adv-option" onclick="selectAdv(this, 'ls')">
+          <div class="avatar avatar-sm av-ls">LS</div>
+          <div class="adv-option-info">
+            <p class="adv-option-name">Dr. Lucas Silva <span class="badge badge-tag badge-success" style="font-size:9.5px;margin-left:4px;">Disponível</span></p>
+            <p class="adv-option-load">18 processos · Carga: 36%</p>
+          </div>
+          <div class="adv-check"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="modal-note" id="modal-note">Selecione um advogado para continuar</p>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-md" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-default btn-md" id="confirm-btn" onclick="confirmAtribuir()" disabled style="opacity:.45;cursor:not-allowed;">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 6-6"/></svg>
+          Confirmar atribuição
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Period selector ── */
+function setPeriod(btn) {
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ── Filter chips ── */
+function setFilter(btn) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ── Modal ── */
+const PROCESS_DATA = {
+  industriex: { name: 'Industriex S/A × União Federal',       cnj: '0009871-44.2024.4.03.6100 · Contestação · Vence hoje' },
+  medtech:    { name: 'MedTech Brasil × Plano de Saúde',      cnj: '0003241-18.2024.8.26.0100 · Manifestação · Vence hoje' },
+  delta:      { name: 'Construtora Delta × Município SP',     cnj: '0012340-77.2023.8.26.0053 · Recurso · Vence hoje' },
+  techpay:    { name: 'TechPay Brasil × Banco do Investimento', cnj: '0007891-33.2024.8.26.0100 · Petição · Vence amanhã' },
+  farma:      { name: 'Farmacêutica Horizonte × ANVISA',      cnj: '0004512-90.2024.4.01.3400 · Impugnação · Em 3 dias' },
+};
+
+let selectedAdv = null;
+
+function openModal(procId) {
+  const data = PROCESS_DATA[procId] || {};
+  document.getElementById('modal-proc-name').textContent = data.name || '';
+  document.getElementById('modal-proc-cnj').textContent = data.cnj || '';
+  selectedAdv = null;
+  document.querySelectorAll('.adv-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('confirm-btn').disabled = true;
+  document.getElementById('confirm-btn').style.opacity = '.45';
+  document.getElementById('confirm-btn').style.cursor = 'not-allowed';
+  document.getElementById('modal-note').textContent = 'Selecione um advogado para continuar';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function selectAdv(el, id) {
+  document.querySelectorAll('.adv-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAdv = id;
+  const confirmBtn = document.getElementById('confirm-btn');
+  confirmBtn.disabled = false;
+  confirmBtn.style.opacity = '1';
+  confirmBtn.style.cursor = 'pointer';
+  const names = { rf:'Dr. Rafael Fontes', mb:'Dra. Marina Barros', ca:'Dr. Carlos Alves', jp:'Dra. Julia Prado', ls:'Dr. Lucas Silva' };
+  document.getElementById('modal-note').textContent = `Selecionado: ${names[id]}`;
+}
+
+function confirmAtribuir() {
+  if (!selectedAdv) return;
+  // Animação de sucesso
+  const btn = document.getElementById('confirm-btn');
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 6-6"/></svg> Atribuindo…';
+  btn.disabled = true;
+  setTimeout(() => {
+    closeModal();
+    // Reset btn
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l3 3 6-6"/></svg> Confirmar atribuição';
+    btn.disabled = false;
+    btn.style.opacity = '.45';
+    btn.style.cursor = 'not-allowed';
+  }, 900);
+}
+
+/* ── Chart tooltips ── */
+document.querySelectorAll('.chart-dot').forEach(dot => {
+  dot.style.cursor = 'pointer';
+  dot.addEventListener('mouseenter', (e) => {
+    const tt = document.getElementById('chart-tooltip');
+    const m  = dot.dataset.m;
+    const a  = dot.dataset.a;
+    const en = dot.dataset.e;
+    const c  = dot.dataset.c;
+    tt.innerHTML = `
+      <p class="ct-month">${m}</p>
+      <div class="ct-row"><div class="ct-dot" style="background:hsl(33,60%,50%)"></div><span style="color:hsl(var(--muted-fg));font-size:11px;">Abertos</span><span style="margin-left:auto;font-weight:600;">${a}</span></div>
+      <div class="ct-row"><div class="ct-dot" style="background:hsl(142,71%,45%)"></div><span style="color:hsl(var(--muted-fg));font-size:11px;">Encerrados</span><span style="margin-left:auto;font-weight:600;">${en}</span></div>
+      <div class="ct-row"><div class="ct-dot" style="background:hsl(199,89%,48%)"></div><span style="color:hsl(var(--muted-fg));font-size:11px;">Cumpridos</span><span style="margin-left:auto;font-weight:600;">${c}</span></div>
+    `;
+    const rect = dot.closest('.chart-svg-wrap').getBoundingClientRect();
+    const dRect = dot.getBoundingClientRect();
+    tt.style.left = (dRect.left - rect.left - 60) + 'px';
+    tt.style.top  = (dRect.top  - rect.top  - 90) + 'px';
+    tt.classList.add('visible');
+    dot.setAttribute('r', '5');
+  });
+  dot.addEventListener('mouseleave', () => {
+    document.getElementById('chart-tooltip').classList.remove('visible');
+    dot.setAttribute('r', '4');
+  });
+});
+
+/* ── ESC fecha modal ── */
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+<!-- ── Prototype Nav Bar ── -->
+<style>
+.proto-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:hsl(0 0% 9%);border:1px solid hsl(0 0% 20%);border-radius:40px;padding:6px 8px;display:flex;align-items:center;gap:4px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;font-family:"Inter",-apple-system,sans-serif;}
+.proto-nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(0 0% 35%);padding:0 8px 0 4px;border-right:1px solid hsl(0 0% 18%);margin-right:4px;white-space:nowrap;}
+.proto-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;text-decoration:none;font-size:11px;font-weight:500;color:hsl(0 0% 60%);transition:all 150ms;white-space:nowrap;border:1px solid transparent;}
+.proto-btn:hover{background:hsl(0 0% 16%);color:#f2f2f2;border-color:hsl(0 0% 22%);}
+.proto-btn.proto-active{background:hsl(33 60% 50%/.15);color:hsl(33 60% 65%);border-color:hsl(33 60% 50%/.3);}
+.proto-sep{width:1px;height:16px;background:hsl(0 0% 18%);margin:0 2px;flex-shrink:0;}
+</style>
+<nav class="proto-nav" aria-label="Navegação do protótipo">
+  <span class="proto-nav-label">Lexis MVP</span>
+  <a class="proto-btn" href="index.html">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5L5.5 1.5 10 5.5V10H7V7.5H4V10H1V5.5Z"/></svg>
+    Início
+  </a>
+  <div class="proto-sep"></div>
+  <a class="proto-btn " href="dashboard.html">Dashboard Adv.</a>
+  <a class="proto-btn proto-active" href="dashboard-gestor.html">Dashboard Gestor</a>
+  <a class="proto-btn " href="processo-detalhe.html">Processo</a>
+  <a class="proto-btn " href="equipe-gestao.html">Equipe</a>
+</nav>
+
+</body>
+</html>

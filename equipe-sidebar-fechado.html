@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Equipe (Sidebar Fechado)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:0 0% 97%;--fg:0 0% 9%;--card:0 0% 100%;--primary:0 0% 18%;--primary-fg:0 0% 98%;
+  --muted:0 0% 96%;--muted-fg:0 0% 45%;--accent:33 60% 50%;--border:0 0% 83%;--ring:33 60% 50%;--radius:0.375rem;
+  --success:142 71% 45%;--success-bg:142 77% 97%;--success-border:142 60% 75%;--success-fg:142 71% 25%;
+  --warning:38 92% 50%;--warning-bg:48 100% 96%;--warning-border:38 80% 68%;--warning-fg:33 88% 28%;
+  --error:0 84% 60%;--error-bg:0 100% 97%;--error-border:0 84% 75%;--error-fg:0 72% 35%;
+  --info:199 89% 48%;--info-bg:204 100% 97%;--info-border:199 80% 72%;--info-fg:199 89% 26%;
+  --sb-bg:0 0% 11%;--sb-fg:0 0% 95%;--sb-muted:0 0% 40%;--sb-border:0 0% 17%;
+  --sb-w:220px; --sb-w-collapsed:52px;
+  --font-sans:'Inter',-apple-system,sans-serif;
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --sh-xs:0 1px 2px 0 rgb(0 0 0/.05);
+  --sh-sm:0 1px 3px 0 rgb(0 0 0/.07),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-md:0 4px 6px -1px rgb(0 0 0/.07),0 2px 4px -2px rgb(0 0 0/.04);
+  --sh-lg:0 10px 15px -3px rgb(0 0 0/.09),0 4px 6px -4px rgb(0 0 0/.05);
+  --sh-xl:0 20px 25px -5px rgb(0 0 0/.1),0 8px 10px -6px rgb(0 0 0/.04);
+  --sh-focus:0 0 0 3px hsl(33 60% 50%/.25);
+  --drawer-w:480px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:hsl(var(--fg));background:hsl(var(--bg));display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+*{scrollbar-width:thin;scrollbar-color:hsl(var(--border)) transparent;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:4px;}
+
+/* ══ PRIMITIVES ══ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:500;line-height:1;cursor:pointer;border:none;transition:all 150ms;white-space:nowrap;text-decoration:none;outline:none;font-family:var(--font-sans);}
+.btn:focus-visible{box-shadow:var(--sh-focus);}
+.btn-xs{height:26px;padding:0 8px;font-size:11.5px;}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+.btn-md{height:34px;padding:0 14px;}
+.btn-icon{width:30px;height:30px;padding:0;flex-shrink:0;}
+.btn-icon-sm{width:26px;height:26px;padding:0;flex-shrink:0;border-radius:calc(var(--radius) - 1px);}
+.btn-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.btn-default:hover{background:hsl(0 0% 23%);}
+.btn-outline{background:transparent;color:hsl(var(--fg));border:1px solid hsl(var(--border));}
+.btn-outline:hover{background:hsl(var(--muted));}
+.btn-ghost{background:transparent;color:hsl(var(--muted-fg));border:none;}
+.btn-ghost:hover{background:hsl(var(--muted));color:hsl(var(--fg));}
+.btn-link{background:transparent;border:none;color:hsl(var(--accent));padding:0;height:auto;font-size:12px;font-weight:500;}
+.btn-link:hover{opacity:.75;text-decoration:underline;}
+.btn-accent{background:hsl(var(--accent));color:white;}
+.btn-accent:hover{background:hsl(33 60% 43%);}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;line-height:1;white-space:nowrap;}
+.badge-pill{padding:3px 9px;border-radius:9999px;}
+.badge-tag{padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;letter-spacing:.02em;}
+.badge-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));}
+.badge-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.badge-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+.badge-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));}
+.badge-info{background:hsl(var(--info-bg));color:hsl(var(--info-fg));border:1px solid hsl(var(--info-border));}
+.badge-accent{background:hsl(33 60% 50%/.12);color:hsl(var(--accent));border:1px solid hsl(33 60% 50%/.28);}
+.badge-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+
+.card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);box-shadow:var(--sh-sm);}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid hsl(var(--border));}
+.card-title{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:hsl(var(--fg));}
+.card-dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--accent));flex-shrink:0;}
+
+.avatar{border-radius:9999px;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;flex-shrink:0;}
+.av-xs{width:20px;height:20px;font-size:8px;}
+.av-sm{width:28px;height:28px;font-size:10px;}
+.av-md{width:36px;height:36px;font-size:13px;}
+.av-lg{width:52px;height:52px;font-size:18px;}
+.av-rf{background:linear-gradient(135deg,hsl(var(--accent)) 0%,hsl(30 55% 35%) 100%);}
+.av-mb{background:linear-gradient(135deg,hsl(199 89% 48%) 0%,hsl(199 89% 30%) 100%);}
+.av-ca{background:linear-gradient(135deg,hsl(142 71% 45%) 0%,hsl(142 71% 28%) 100%);}
+.av-jp{background:linear-gradient(135deg,hsl(270 60% 55%) 0%,hsl(270 60% 35%) 100%);}
+.av-ls{background:linear-gradient(135deg,hsl(0 0% 45%) 0%,hsl(0 0% 28%) 100%);}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sb-w);min-height:100vh;flex-shrink:0;
+  background:hsl(var(--sb-bg));display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  transition:width .22s cubic-bezier(.4,0,.2,1);
+}
+.sidebar.collapsed{width:var(--sb-w-collapsed);}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,hsl(33 60% 50%/.14) 0%,transparent 70%);pointer-events:none;transition:opacity .22s;}
+.sidebar.collapsed::before{opacity:0;}
+
+.sb-logo{display:flex;align-items:center;gap:10px;padding:14px 11px;border-bottom:1px solid hsl(var(--sb-border));cursor:pointer;min-height:48px;}
+.logo-orb{width:30px;height:30px;border-radius:50%;background:hsl(var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+.logo-orb::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:hsl(var(--sb-bg));}
+.logo-text{overflow:hidden;transition:opacity .15s,width .22s;white-space:nowrap;}
+.sidebar.collapsed .logo-text{opacity:0;width:0;}
+.logo-name{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;color:hsl(var(--sb-fg));}
+.logo-sub{display:block;font-size:8.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:hsl(var(--accent));margin-top:2px;}
+
+.nav-sec{padding:10px 6px 4px;}
+.nav-label{padding:0 6px;margin-bottom:4px;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:hsl(var(--sb-muted));white-space:nowrap;overflow:hidden;transition:opacity .15s;}
+.sidebar.collapsed .nav-label{opacity:0;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px;border-radius:calc(var(--radius) - 1px);color:hsl(0 0% 58%);font-size:13px;font-weight:450;cursor:pointer;transition:background 150ms,color 150ms;text-decoration:none;min-width:0;position:relative;}
+.nav-item:hover{background:hsl(0 0% 100%/.05);color:hsl(var(--sb-fg));}
+.nav-item.active{background:hsl(33 60% 50%/.13);color:hsl(var(--accent));}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.7;}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-text{white-space:nowrap;overflow:hidden;transition:opacity .15s,width .22s;flex:1;}
+.sidebar.collapsed .nav-text{opacity:0;width:0;}
+.nav-badge{min-width:18px;height:18px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;padding:0 5px;background:hsl(var(--error));color:white;flex-shrink:0;transition:opacity .15s;}
+.nav-badge.am{background:hsl(var(--accent));}
+.sidebar.collapsed .nav-badge{opacity:0;pointer-events:none;}
+
+/* Tooltip on collapsed nav */
+.sidebar.collapsed .nav-item{justify-content:center;}
+.sidebar.collapsed .nav-item::after{
+  content:attr(data-label);position:absolute;left:calc(var(--sb-w-collapsed) + 8px);top:50%;transform:translateY(-50%);
+  background:hsl(var(--primary));color:white;font-size:12px;font-weight:500;
+  padding:5px 10px;border-radius:var(--radius);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:100;
+  box-shadow:var(--sh-md);
+}
+.sidebar.collapsed .nav-item:hover::after{opacity:1;}
+
+.sb-sep{height:1px;background:hsl(var(--sb-border));margin:6px 10px;}
+.sb-spacer{flex:1;}
+.sb-footer{padding:8px 6px;border-top:1px solid hsl(var(--sb-border));}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:calc(var(--radius) - 1px);cursor:pointer;transition:background 150ms;}
+.user-row:hover{background:hsl(0 0% 100%/.05);}
+.user-info{overflow:hidden;transition:opacity .15s,width .22s;white-space:nowrap;}
+.sidebar.collapsed .user-info{opacity:0;width:0;}
+.user-name{font-size:12px;font-weight:600;color:hsl(var(--sb-fg));}
+.user-role{font-size:10px;color:hsl(var(--sb-muted));margin-top:1px;}
+
+/* Toggle button */
+.sb-toggle{
+  position:absolute;top:12px;right:-11px;
+  width:22px;height:22px;border-radius:50%;
+  background:hsl(var(--card));border:1px solid hsl(var(--border));
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10;box-shadow:var(--sh-sm);
+  transition:transform .22s,box-shadow 150ms;
+}
+.sb-toggle:hover{box-shadow:var(--sh-md);}
+.sidebar.collapsed .sb-toggle{transform:rotate(180deg);}
+.sb-toggle svg{color:hsl(var(--muted-fg));transition:color 150ms;}
+.sb-toggle:hover svg{color:hsl(var(--fg));}
+
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;min-width:0;}
+
+/* Topbar */
+.topbar{height:48px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.topbar-left{flex:1;display:flex;align-items:center;gap:8px;}
+.page-title{font-size:14px;font-weight:600;color:hsl(var(--fg));}
+.topbar-sep{width:1px;height:16px;background:hsl(var(--border));}
+.topbar-sub{font-size:12px;color:hsl(var(--muted-fg));}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid hsl(var(--border));background:hsl(var(--card));flex-shrink:0;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:280px;}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:hsl(var(--muted-fg));pointer-events:none;}
+.search-input{width:100%;height:30px;padding:0 10px 0 30px;border-radius:var(--radius);border:1px solid hsl(var(--border));background:hsl(var(--muted));font-size:12.5px;color:hsl(var(--fg));font-family:var(--font-sans);outline:none;transition:border-color 150ms,background 150ms;}
+.search-input:focus{border-color:hsl(var(--accent));background:hsl(var(--card));box-shadow:var(--sh-focus);}
+.search-input::placeholder{color:hsl(var(--muted-fg));}
+
+.select-sm{height:30px;padding:0 26px 0 10px;border-radius:var(--radius);border:1px solid hsl(var(--border));background:hsl(var(--card));font-size:12.5px;color:hsl(var(--fg));font-family:var(--font-sans);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color 150ms;}
+.select-sm:focus{border-color:hsl(var(--accent));}
+
+.toggle-view{display:flex;align-items:center;gap:2px;background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius);padding:2px;}
+.tv-btn{width:28px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:calc(var(--radius) - 2px);cursor:pointer;color:hsl(var(--muted-fg));transition:all 150ms;border:none;background:transparent;}
+.tv-btn.active{background:hsl(var(--card));color:hsl(var(--fg));box-shadow:var(--sh-xs);}
+.tv-btn:hover:not(.active){color:hsl(var(--fg));}
+
+.toolbar-right{display:flex;align-items:center;gap:6px;margin-left:auto;}
+
+/* KPI Strip */
+.kpi-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 20px;border-bottom:1px solid hsl(var(--border));background:hsl(var(--card));flex-shrink:0;}
+.ks-item{display:flex;align-items:center;gap:12px;}
+.ks-item+.ks-item{border-left:1px solid hsl(var(--border));padding-left:16px;margin-left:6px;}
+.ks-icon{width:36px;height:36px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ks-icon.accent{background:hsl(33 60% 50%/.1);color:hsl(var(--accent));}
+.ks-icon.success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));}
+.ks-icon.warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));}
+.ks-label{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:3px;}
+.ks-value{font-family:var(--font-serif);font-size:22px;line-height:1;color:hsl(var(--fg));}
+.ks-sub{font-size:11px;color:hsl(var(--muted-fg));margin-top:2px;}
+
+/* Content scroll */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px 32px;}
+
+/* ══ CARD GRID ══ */
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(284px,1fr));gap:12px;}
+.adv-grid.list-mode{grid-template-columns:1fr;}
+
+/* Advogado Card */
+.adv-card{
+  background:hsl(var(--card));border:1px solid hsl(var(--border));
+  border-radius:var(--radius);box-shadow:var(--sh-xs);
+  overflow:hidden;transition:box-shadow 150ms,transform 150ms;
+  animation:fadeUp .3s ease both;cursor:pointer;
+}
+.adv-card:hover{box-shadow:var(--sh-md);transform:translateY(-1px);}
+.adv-card.selected-card{border-color:hsl(var(--accent));box-shadow:0 0 0 2px hsl(33 60% 50%/.2);}
+
+.adv-card-top{padding:14px 14px 10px;display:flex;align-items:flex-start;gap:10px;}
+.adv-card-info{flex:1;min-width:0;}
+.adv-card-name{font-size:13.5px;font-weight:600;color:hsl(var(--fg));margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.adv-card-meta{font-size:11.5px;color:hsl(var(--muted-fg));margin-bottom:4px;}
+.adv-card-area{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+
+.adv-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid hsl(var(--border));}
+.stat-cell{padding:9px 14px;border-right:1px solid hsl(var(--border));}
+.stat-cell:nth-child(2n){border-right:none;}
+.stat-cell:nth-child(-n+2){border-bottom:1px solid hsl(var(--border));}
+.stat-label{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:3px;}
+.stat-value{font-size:15px;font-weight:700;color:hsl(var(--fg));font-variant-numeric:tabular-nums;font-family:var(--font-serif);}
+.stat-value.ok{color:hsl(var(--success-fg));}
+.stat-value.warn{color:hsl(var(--warning-fg));}
+.stat-value.err{color:hsl(var(--error-fg));}
+
+.adv-card-progress{padding:10px 14px;border-top:1px solid hsl(var(--border));}
+.progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.progress-label{font-size:10.5px;font-weight:600;color:hsl(var(--muted-fg));text-transform:uppercase;letter-spacing:.05em;}
+.progress-pct{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;}
+.progress-pct.ok{color:hsl(var(--success-fg));}
+.progress-pct.warn{color:hsl(var(--warning-fg));}
+.progress-pct.err{color:hsl(var(--error-fg));}
+.progress-bar{height:5px;border-radius:9999px;background:hsl(var(--muted));border:1px solid hsl(var(--border));overflow:hidden;}
+.progress-fill{height:100%;border-radius:9999px;transition:width .6s ease;}
+.pf-ok{background:hsl(var(--success));}
+.pf-warn{background:hsl(var(--warning));}
+.pf-err{background:hsl(var(--error));}
+
+.adv-card-footer{padding:8px 14px;border-top:1px solid hsl(var(--border));display:flex;align-items:center;gap:6px;background:hsl(var(--muted)/.4);}
+
+/* List mode row */
+.adv-list-row{
+  background:hsl(var(--card));border:1px solid hsl(var(--border));
+  border-radius:var(--radius);box-shadow:var(--sh-xs);
+  display:grid;grid-template-columns:200px 1fr 100px 110px 100px 110px;
+  align-items:center;gap:12px;padding:10px 16px;
+  transition:box-shadow 120ms,background 120ms;cursor:pointer;
+  animation:fadeUp .25s ease both;
+}
+.adv-list-row:hover{box-shadow:var(--sh-sm);background:hsl(var(--muted)/.3);}
+.adv-list-row.list-header{background:hsl(var(--muted)/.7);cursor:default;animation:none;}
+.adv-list-row.list-header:hover{box-shadow:var(--sh-xs);background:hsl(var(--muted)/.7);}
+.list-th{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));}
+.list-name-cell{display:flex;align-items:center;gap:8px;min-width:0;}
+.list-name-info{min-width:0;}
+.list-name{font-size:13px;font-weight:600;color:hsl(var(--fg));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-sub{font-size:11px;color:hsl(var(--muted-fg));}
+.list-actions{display:flex;align-items:center;gap:4px;justify-content:flex-end;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ══ DRAWER ══ */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:var(--drawer-w);
+  background:hsl(var(--card));border-left:1px solid hsl(var(--border));
+  box-shadow:var(--sh-xl);z-index:201;
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open{transform:none;}
+
+.drawer-header{padding:16px 18px;border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.drawer-adv-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.drawer-adv-info{flex:1;min-width:0;}
+.drawer-adv-name{font-family:var(--font-serif);font-size:18px;letter-spacing:-.01em;color:hsl(var(--fg));margin-bottom:3px;}
+.drawer-adv-meta{font-size:12px;color:hsl(var(--muted-fg));display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.drawer-adv-sep{opacity:.35;}
+.drawer-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.dkpi{background:hsl(var(--muted)/.6);border:1px solid hsl(var(--border));border-radius:var(--radius);padding:8px 10px;text-align:center;}
+.dkpi-label{font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:4px;}
+.dkpi-value{font-family:var(--font-serif);font-size:20px;line-height:1;color:hsl(var(--fg));}
+.dkpi-value.ok{color:hsl(var(--success-fg));}
+.dkpi-value.err{color:hsl(var(--error-fg));}
+
+.drawer-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+
+/* Chart inside drawer */
+.drawer-chart{padding:14px 18px;border-bottom:1px solid hsl(var(--border));}
+.drawer-section-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.drawer-chart-legend{display:flex;gap:12px;margin-bottom:8px;}
+.dc-leg{display:flex;align-items:center;gap:5px;font-size:11px;color:hsl(var(--muted-fg));}
+.dc-leg-dot{width:8px;height:3px;border-radius:9999px;}
+
+/* Process list inside drawer */
+.drawer-procs{flex:1;display:flex;flex-direction:column;}
+.drawer-procs-toolbar{display:flex;align-items:center;gap:6px;padding:10px 18px;border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.proc-fchip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:9999px;font-size:11.5px;font-weight:500;color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));cursor:pointer;transition:all 150ms;background:transparent;font-family:var(--font-sans);}
+.proc-fchip:hover{background:hsl(var(--muted));color:hsl(var(--fg));}
+.proc-fchip.active{background:hsl(var(--primary));color:hsl(var(--primary-fg));border-color:hsl(var(--primary));}
+
+.proc-list{flex:1;overflow-y:auto;}
+.proc-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid hsl(var(--border));transition:background 120ms;}
+.proc-row:hover{background:hsl(var(--muted)/.5);}
+.proc-row:last-child{border-bottom:none;}
+.proc-check{width:16px;height:16px;border-radius:4px;border:1.5px solid hsl(var(--border));flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms;background:transparent;}
+.proc-check.checked{background:hsl(var(--accent));border-color:hsl(var(--accent));}
+.proc-info{flex:1;min-width:0;}
+.proc-name{font-size:12.5px;font-weight:500;color:hsl(var(--fg));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px;}
+.proc-cnj{font-size:11px;color:hsl(var(--muted-fg));font-family:var(--font-mono);}
+.proc-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+/* Floating action bar */
+.float-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  background:hsl(var(--primary));color:hsl(var(--primary-fg));
+  padding:12px 18px;display:flex;align-items:center;gap:10px;
+  transform:translateY(100%);transition:transform .2s cubic-bezier(.4,0,.2,1);
+  z-index:10;
+}
+.float-bar.visible{transform:none;}
+.float-bar-text{font-size:13px;font-weight:500;flex:1;}
+.float-bar-clear{color:hsl(0 0% 70%);background:transparent;border:none;cursor:pointer;font-size:12px;font-family:var(--font-sans);}
+.float-bar-clear:hover{color:white;}
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:hsl(var(--card));border-radius:calc(var(--radius)*2);box-shadow:var(--sh-xl);width:520px;max-width:calc(100vw - 32px);transform:translateY(10px) scale(.98);transition:transform .22s;overflow:hidden;max-height:90vh;display:flex;flex-direction:column;}
+.modal-overlay.open .modal{transform:none;}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.modal-title{font-size:15px;font-weight:600;color:hsl(var(--fg));margin-bottom:3px;}
+.modal-sub-text{font-size:12px;color:hsl(var(--muted-fg));}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.modal-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid hsl(var(--border));background:hsl(var(--muted)/.4);flex-shrink:0;}
+
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.span2{grid-column:span 2;}
+.form-label{font-size:11.5px;font-weight:600;color:hsl(var(--fg));letter-spacing:.02em;}
+.form-input{height:34px;padding:0 10px;border-radius:var(--radius);border:1px solid hsl(var(--border));background:hsl(var(--card));font-size:13px;color:hsl(var(--fg));font-family:var(--font-sans);outline:none;transition:border-color 150ms,box-shadow 150ms;width:100%;}
+.form-input:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.form-input::placeholder{color:hsl(var(--muted-fg));}
+.form-select{height:34px;padding:0 26px 0 10px;border-radius:var(--radius);border:1px solid hsl(var(--border));background:hsl(var(--card));font-size:13px;color:hsl(var(--fg));font-family:var(--font-sans);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;width:100%;transition:border-color 150ms;}
+.form-select:focus{border-color:hsl(var(--accent));}
+.form-hint{font-size:11px;color:hsl(var(--muted-fg));}
+.form-divider{grid-column:span 2;height:1px;background:hsl(var(--border));margin:4px 0;}
+
+/* Toggle switch */
+.toggle-wrap{display:flex;align-items:center;gap:10px;}
+.toggle{width:36px;height:20px;border-radius:9999px;background:hsl(var(--muted));border:1px solid hsl(var(--border));cursor:pointer;position:relative;transition:background .2s,border-color .2s;flex-shrink:0;}
+.toggle.on{background:hsl(var(--success));border-color:hsl(var(--success));}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:white;box-shadow:var(--sh-xs);transition:transform .2s;}
+.toggle.on::after{transform:translateX(16px);}
+
+/* Reattribute mini modal */
+.mini-modal{background:hsl(var(--card));border-radius:var(--radius);box-shadow:var(--sh-xl);width:360px;max-width:calc(100vw - 32px);transform:translateY(10px) scale(.98);transition:transform .22s;overflow:hidden;}
+.modal-overlay.open .mini-modal{transform:none;}
+
+/* Adv option in mini modal */
+.adv-opt{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:background 120ms;border-bottom:1px solid hsl(var(--border));}
+.adv-opt:last-child{border-bottom:none;}
+.adv-opt:hover{background:hsl(var(--muted));}
+.adv-opt.sel{background:hsl(33 60% 50%/.07);}
+.adv-opt-info{flex:1;min-width:0;}
+.adv-opt-name{font-size:13px;font-weight:500;color:hsl(var(--fg));}
+.adv-opt-load{font-size:11px;color:hsl(var(--muted-fg));}
+.adv-radio{width:16px;height:16px;border-radius:50%;border:2px solid hsl(var(--border));flex-shrink:0;transition:all 150ms;display:flex;align-items:center;justify-content:center;}
+.adv-opt.sel .adv-radio{background:hsl(var(--accent));border-color:hsl(var(--accent));}
+.adv-opt.sel .adv-radio::after{content:'';width:5px;height:5px;border-radius:50%;background:white;}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:hsl(var(--primary));color:white;
+  padding:10px 16px;border-radius:var(--radius);box-shadow:var(--sh-lg);
+  font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;
+  opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:500;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+svg{display:block;}
+:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+.no-transition *{transition:none!important;animation:none!important;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar collapsed" id="sidebar">
+  <div class="sb-toggle" onclick="toggleSidebar()" title="Expandir menu">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 2L3.5 6l4 4"/></svg>
+  </div>
+  <div class="sb-logo" onclick="toggleSidebar()">
+    <div class="logo-orb"></div>
+    <div class="logo-text"><span class="logo-name">LEXIS</span><span class="logo-sub">Escritório Digital</span></div>
+  </div>
+  <nav class="nav-sec">
+    <p class="nav-label">Principal</p>
+    <a class="nav-item" href="dashboard-gestor.html" data-label="Início">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6L7.5 1.5 13.5 6V13A.5.5 0 0113 13.5H9.5V10H5.5V13.5H2A.5.5 0 011.5 13V6Z"/></svg>
+      <span class="nav-text">Início</span>
+    </a>
+    <a class="nav-item" href="processo-detalhe.html" data-label="Processos">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="12" height="12" rx="1.5"/><path d="M4.5 7.5h6M4.5 5h3M4.5 10h4.5"/></svg>
+      <span class="nav-text">Processos</span>
+      <span class="nav-badge am">147</span>
+    </a>
+    <a class="nav-item" href="#" data-label="Prazos">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4.5V8l2 2"/></svg>
+      <span class="nav-text">Prazos</span>
+      <span class="nav-badge">11</span>
+    </a>
+    <a class="nav-item" href="#" data-label="Intimações">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2H13.5l-1-2z"/><path d="M5.5 13.5h4"/></svg>
+      <span class="nav-text">Intimações</span>
+      <span class="nav-badge">23</span>
+    </a>
+    <a class="nav-item" href="#" data-label="Agenda">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="12" height="11" rx="1.5"/><path d="M4.5 1.5v2M10.5 1.5v2M1.5 6.5h12"/></svg>
+      <span class="nav-text">Agenda</span>
+    </a>
+  </nav>
+  <div class="sb-sep"></div>
+  <nav class="nav-sec">
+    <p class="nav-label">Gestão</p>
+    <a class="nav-item active" href="#" data-label="Equipe">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="4.5" r="2"/><circle cx="10.5" cy="4.5" r="2"/><path d="M1.5 13c0-2.2 1.8-4 4-4s4 1.8 4 4"/><path d="M10.5 9c1.4 0 3 .9 3 4"/></svg>
+      <span class="nav-text">Equipe</span>
+    </a>
+    <a class="nav-item" href="#" data-label="Relatórios">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 11.5V4a1 1 0 011-1h2a1 1 0 011 1v7.5"/><path d="M8.5 11.5V7a1 1 0 011-1h2a1 1 0 011 1v4.5"/><path d="M1.5 11.5h12"/></svg>
+      <span class="nav-text">Relatórios</span>
+    </a>
+    <a class="nav-item" href="#" data-label="Configurações">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 2v2M7.5 11v2M2 7.5h2M11 7.5h2"/><circle cx="7.5" cy="7.5" r="2.5"/></svg>
+      <span class="nav-text">Configurações</span>
+    </a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-footer">
+    <div class="user-row">
+      <div class="avatar av-sm av-rf">RF</div>
+      <div class="user-info"><p class="user-name">Dr. Rafael Fontes</p><p class="user-role">Sócio Gestor</p></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="4.5" r="2"/><circle cx="10.5" cy="4.5" r="2"/><path d="M1.5 13c0-2.2 1.8-4 4-4s4 1.8 4 4"/><path d="M10.5 9c1.4 0 3 .9 3 4"/></svg>
+      <p class="page-title">Equipe</p>
+      <div class="topbar-sep"></div>
+      <p class="topbar-sub">5 membros ativos</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn btn-outline btn-sm" onclick="openCadastro()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg>
+        Adicionar membro
+      </button>
+      <button class="btn btn-ghost btn-icon" aria-label="Notificações" style="position:relative;">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5a5 5 0 00-5 5v2.5l-1 1.5h12l-1-1.5V6.5a5 5 0 00-5-5z"/><path d="M6 12.5a1.5 1.5 0 003 0"/></svg>
+        <span style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:hsl(var(--error));border:1.5px solid hsl(var(--card));"></span>
+      </button>
+      <div class="avatar av-sm av-rf" style="cursor:pointer;">RF</div>
+    </div>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M10.5 10.5l-2-2"/></svg>
+      <input class="search-input" type="text" placeholder="Buscar por nome ou OAB…"/>
+    </div>
+    <select class="select-sm" style="width:160px;">
+      <option>Todas as áreas</option>
+      <option>Cível</option>
+      <option>Trabalhista</option>
+      <option>Tributário</option>
+      <option>Empresarial</option>
+    </select>
+    <select class="select-sm" style="width:160px;">
+      <option>Ordenar: Carga ↓</option>
+      <option>Ordenar: Nome A–Z</option>
+      <option>Ordenar: Cumprimento ↓</option>
+      <option>Ordenar: Processos ↓</option>
+    </select>
+    <div class="toggle-view" id="view-toggle">
+      <button class="tv-btn active" id="btn-card" onclick="setView('card')" title="Cards">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>
+      </button>
+      <button class="tv-btn" id="btn-list" onclick="setView('list')" title="Lista">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 3.5h12M1 7h12M1 10.5h12"/></svg>
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <span style="font-size:11.5px;color:hsl(var(--muted-fg));">Fev/25 · Mês atual</span>
+    </div>
+  </div>
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="ks-item">
+      <div class="ks-icon accent">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="5" r="2.5"/><circle cx="11.5" cy="5" r="2.5"/><path d="M1.5 14c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"/><path d="M11.5 9.5c1.8.2 3.5 1.2 3.5 4.5"/></svg>
+      </div>
+      <div>
+        <p class="ks-label">Total de membros</p>
+        <p class="ks-value">5</p>
+        <p class="ks-sub">4 advogados · 1 gestor</p>
+      </div>
+    </div>
+    <div class="ks-item">
+      <div class="ks-icon warning">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13V5a1 1 0 011-1h2a1 1 0 011 1v8"/><path d="M10 13V8a1 1 0 011-1h2a1 1 0 011 1v5"/><path d="M1 13h14"/></svg>
+      </div>
+      <div>
+        <p class="ks-label">Carga média</p>
+        <p class="ks-value">74%</p>
+        <p class="ks-sub">1 em sobrecarga (Marina)</p>
+      </div>
+    </div>
+    <div class="ks-item">
+      <div class="ks-icon success">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M5 8.5l2 2 4-4"/></svg>
+      </div>
+      <div>
+        <p class="ks-label">Cumprimento médio</p>
+        <p class="ks-value">95%</p>
+        <p class="ks-sub">+3pp vs mês anterior</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="adv-grid" id="adv-grid">
+
+      <!-- Card 1 — RF (gestor/você) -->
+      <div class="adv-card" style="animation-delay:.04s" onclick="openDrawer('rf')">
+        <div class="adv-card-top">
+          <div class="avatar av-md av-rf">RF</div>
+          <div class="adv-card-info">
+            <p class="adv-card-name">Dr. Rafael Fontes</p>
+            <p class="adv-card-meta">OAB/SP 123.456</p>
+            <div class="adv-card-area">
+              <span class="badge badge-tag badge-accent">Você</span>
+              <span class="badge badge-tag badge-secondary">Gestor</span>
+              <span class="badge badge-tag badge-secondary">Cível</span>
+            </div>
+          </div>
+        </div>
+        <div class="adv-card-stats">
+          <div class="stat-cell"><p class="stat-label">Ativos</p><p class="stat-value">47</p></div>
+          <div class="stat-cell"><p class="stat-label">Encerrados</p><p class="stat-value ok">6</p></div>
+          <div class="stat-cell"><p class="stat-label">Prazos pendentes</p><p class="stat-value warn">3</p></div>
+          <div class="stat-cell"><p class="stat-label">Cumprimento</p><p class="stat-value ok">96%</p></div>
+        </div>
+        <div class="adv-card-progress">
+          <div class="progress-header">
+            <span class="progress-label">Carga da carteira</span>
+            <span class="progress-pct warn">94%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill pf-warn" style="width:94%"></div></div>
+        </div>
+        <div class="adv-card-footer" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-xs" onclick="openDrawer('rf')">Ver perfil</button>
+          <button class="btn btn-ghost btn-xs" onclick="openCadastro('rf')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5l2.5 2.5-6 6H1v-2.5l6-6z"/></svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2 — MB (sobrecarga) -->
+      <div class="adv-card" style="animation-delay:.08s" onclick="openDrawer('mb')">
+        <div class="adv-card-top">
+          <div class="avatar av-md av-mb">MB</div>
+          <div class="adv-card-info">
+            <p class="adv-card-name">Dra. Marina Barros</p>
+            <p class="adv-card-meta">OAB/SP 87.234</p>
+            <div class="adv-card-area">
+              <span class="badge badge-tag badge-error">Sobrecarga</span>
+              <span class="badge badge-tag badge-secondary">Cível</span>
+              <span class="badge badge-tag badge-secondary">Trabalhista</span>
+            </div>
+          </div>
+        </div>
+        <div class="adv-card-stats">
+          <div class="stat-cell"><p class="stat-label">Ativos</p><p class="stat-value err">58</p></div>
+          <div class="stat-cell"><p class="stat-label">Encerrados</p><p class="stat-value ok">4</p></div>
+          <div class="stat-cell"><p class="stat-label">Prazos pendentes</p><p class="stat-value err">5</p></div>
+          <div class="stat-cell"><p class="stat-label">Cumprimento</p><p class="stat-value err">81%</p></div>
+        </div>
+        <div class="adv-card-progress">
+          <div class="progress-header">
+            <span class="progress-label">Carga da carteira</span>
+            <span class="progress-pct err">116%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill pf-err" style="width:100%"></div></div>
+        </div>
+        <div class="adv-card-footer" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-xs" onclick="openDrawer('mb')">Ver perfil</button>
+          <button class="btn btn-accent btn-xs" onclick="openDrawer('mb','reatribuir')" style="gap:4px;">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M1 8.5c0-1.5 1.3-2.5 3-2.5"/><path d="M7.5 5.5v4M5.5 7.5h4"/></svg>
+            Reatribuir
+          </button>
+          <button class="btn btn-ghost btn-xs" onclick="openCadastro('mb')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5l2.5 2.5-6 6H1v-2.5l6-6z"/></svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3 — CA (ok) -->
+      <div class="adv-card" style="animation-delay:.12s" onclick="openDrawer('ca')">
+        <div class="adv-card-top">
+          <div class="avatar av-md av-ca">CA</div>
+          <div class="adv-card-info">
+            <p class="adv-card-name">Dr. Carlos Alves</p>
+            <p class="adv-card-meta">OAB/SP 54.891</p>
+            <div class="adv-card-area">
+              <span class="badge badge-tag badge-success">Ok</span>
+              <span class="badge badge-tag badge-secondary">Tributário</span>
+              <span class="badge badge-tag badge-secondary">Empresarial</span>
+            </div>
+          </div>
+        </div>
+        <div class="adv-card-stats">
+          <div class="stat-cell"><p class="stat-label">Ativos</p><p class="stat-value">32</p></div>
+          <div class="stat-cell"><p class="stat-label">Encerrados</p><p class="stat-value ok">9</p></div>
+          <div class="stat-cell"><p class="stat-label">Prazos pendentes</p><p class="stat-value">2</p></div>
+          <div class="stat-cell"><p class="stat-label">Cumprimento</p><p class="stat-value ok">100%</p></div>
+        </div>
+        <div class="adv-card-progress">
+          <div class="progress-header">
+            <span class="progress-label">Carga da carteira</span>
+            <span class="progress-pct ok">64%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill pf-ok" style="width:64%"></div></div>
+        </div>
+        <div class="adv-card-footer" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-xs" onclick="openDrawer('ca')">Ver perfil</button>
+          <button class="btn btn-ghost btn-xs" onclick="openCadastro('ca')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5l2.5 2.5-6 6H1v-2.5l6-6z"/></svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 4 — JP (ok) -->
+      <div class="adv-card" style="animation-delay:.16s" onclick="openDrawer('jp')">
+        <div class="adv-card-top">
+          <div class="avatar av-md av-jp">JP</div>
+          <div class="adv-card-info">
+            <p class="adv-card-name">Dra. Julia Prado</p>
+            <p class="adv-card-meta">OAB/SP 112.043</p>
+            <div class="adv-card-area">
+              <span class="badge badge-tag badge-success">Ok</span>
+              <span class="badge badge-tag badge-secondary">Trabalhista</span>
+            </div>
+          </div>
+        </div>
+        <div class="adv-card-stats">
+          <div class="stat-cell"><p class="stat-label">Ativos</p><p class="stat-value">28</p></div>
+          <div class="stat-cell"><p class="stat-label">Encerrados</p><p class="stat-value ok">7</p></div>
+          <div class="stat-cell"><p class="stat-label">Prazos pendentes</p><p class="stat-value warn">4</p></div>
+          <div class="stat-cell"><p class="stat-label">Cumprimento</p><p class="stat-value ok">98%</p></div>
+        </div>
+        <div class="adv-card-progress">
+          <div class="progress-header">
+            <span class="progress-label">Carga da carteira</span>
+            <span class="progress-pct ok">56%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill pf-ok" style="width:56%"></div></div>
+        </div>
+        <div class="adv-card-footer" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-xs" onclick="openDrawer('jp')">Ver perfil</button>
+          <button class="btn btn-ghost btn-xs" onclick="openCadastro('jp')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5l2.5 2.5-6 6H1v-2.5l6-6z"/></svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 5 — LS (disponível) -->
+      <div class="adv-card" style="animation-delay:.20s" onclick="openDrawer('ls')">
+        <div class="adv-card-top">
+          <div class="avatar av-md av-ls">LS</div>
+          <div class="adv-card-info">
+            <p class="adv-card-name">Dr. Lucas Silva</p>
+            <p class="adv-card-meta">OAB/SP 98.770</p>
+            <div class="adv-card-area">
+              <span class="badge badge-tag badge-info">Disponível</span>
+              <span class="badge badge-tag badge-secondary">Cível</span>
+              <span class="badge badge-tag badge-secondary">Empresarial</span>
+            </div>
+          </div>
+        </div>
+        <div class="adv-card-stats">
+          <div class="stat-cell"><p class="stat-label">Ativos</p><p class="stat-value">18</p></div>
+          <div class="stat-cell"><p class="stat-label">Encerrados</p><p class="stat-value ok">11</p></div>
+          <div class="stat-cell"><p class="stat-label">Prazos pendentes</p><p class="stat-value">1</p></div>
+          <div class="stat-cell"><p class="stat-label">Cumprimento</p><p class="stat-value ok">100%</p></div>
+        </div>
+        <div class="adv-card-progress">
+          <div class="progress-header">
+            <span class="progress-label">Carga da carteira</span>
+            <span class="progress-pct ok">36%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill pf-ok" style="width:36%"></div></div>
+        </div>
+        <div class="adv-card-footer" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-xs" onclick="openDrawer('ls')">Ver perfil</button>
+          <button class="btn btn-ghost btn-xs" onclick="openCadastro('ls')">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5l2.5 2.5-6 6H1v-2.5l6-6z"/></svg>
+            Editar
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /adv-grid -->
+  </div><!-- /content -->
+</main>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <!-- Header com KPIs -->
+  <div class="drawer-header">
+    <div class="drawer-adv-row">
+      <div class="avatar av-lg" id="d-avatar" style="background:linear-gradient(135deg,hsl(33,60%,50%) 0%,hsl(30,55%,35%) 100%);">RF</div>
+      <div class="drawer-adv-info">
+        <p class="drawer-adv-name" id="d-name">Dr. Rafael Fontes</p>
+        <div class="drawer-adv-meta">
+          <span id="d-oab">OAB/SP 123.456</span>
+          <span class="drawer-adv-sep">·</span>
+          <span id="d-area">Cível</span>
+          <span class="drawer-adv-sep">·</span>
+          <span id="d-role-badge"></span>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <button class="btn btn-outline btn-sm" id="d-edit-btn" onclick="openCadastro()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2l2 2-6 6H2V8l6-6z"/></svg>
+          Editar
+        </button>
+        <button class="btn btn-ghost btn-icon" onclick="closeDrawer()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="drawer-kpis">
+      <div class="dkpi"><p class="dkpi-label">Ativos</p><p class="dkpi-value" id="d-ativos">47</p></div>
+      <div class="dkpi"><p class="dkpi-label">Encerrados</p><p class="dkpi-value ok" id="d-encerrados">6</p></div>
+      <div class="dkpi"><p class="dkpi-label">Cumpridos</p><p class="dkpi-value ok" id="d-cumpridos">96%</p></div>
+      <div class="dkpi"><p class="dkpi-label">Vencidos</p><p class="dkpi-value" id="d-vencidos">1</p></div>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Mini chart -->
+    <div class="drawer-chart">
+      <p class="drawer-section-title">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 9V4a.5.5 0 01.5-.5h2a.5.5 0 01.5.5v5"/><path d="M5 9V6a.5.5 0 01.5-.5h2a.5.5 0 01.5.5v3"/><path d="M9 9V7a.5.5 0 01.5-.5h2a.5.5 0 01.5.5v2"/><path d="M0.5 9.5h11"/></svg>
+        Evolução mensal — 6 meses
+      </p>
+      <div class="drawer-chart-legend">
+        <div class="dc-leg"><div class="dc-leg-dot" style="background:hsl(33,60%,50%)"></div>Processos abertos</div>
+        <div class="dc-leg"><div class="dc-leg-dot" style="background:hsl(142,71%,45%)"></div>Prazos cumpridos</div>
+      </div>
+      <svg width="100%" height="90" viewBox="0 0 420 90" preserveAspectRatio="none" id="d-chart-svg">
+        <line x1="0" y1="20" x2="420" y2="20" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <line x1="0" y1="50" x2="420" y2="50" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <line x1="0" y1="80" x2="420" y2="80" stroke="hsl(0,0%,83%)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <!-- Labels X -->
+        <text x="35" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Set</text>
+        <text x="105" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Out</text>
+        <text x="175" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Nov</text>
+        <text x="245" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Dez</text>
+        <text x="315" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Jan</text>
+        <text x="385" y="88" text-anchor="middle" font-size="8" fill="hsl(0,0%,45%)" font-family="Inter,sans-serif">Fev</text>
+        <!-- Lines (ativos: 38,41,43,45,46,47 → scaled to h=70 over max 55) -->
+        <polyline id="d-line-abertos" points="35,47 105,42 175,39 245,36 315,33 385,30" fill="none" stroke="hsl(33,60%,50%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- cumpridos: 5,6,7,7,6,6 (prazos) scaled 0-10 → h=70 -->
+        <polyline id="d-line-cumpridos" points="35,45 105,42 175,38 245,36 315,38 385,40" fill="none" stroke="hsl(142,71%,45%)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,3"/>
+      </svg>
+    </div>
+
+    <!-- Processos list -->
+    <div class="drawer-procs" style="position:relative;">
+      <div class="drawer-procs-toolbar">
+        <p class="drawer-section-title" style="margin:0;flex:1;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="10" height="10" rx="1.5"/><path d="M3.5 6h5M3.5 4h3M3.5 8h3.5"/></svg>
+          Processos ativos
+        </p>
+        <button class="proc-fchip active" onclick="setProcFilter(this)">Todos</button>
+        <button class="proc-fchip" onclick="setProcFilter(this)">Com prazo</button>
+        <button class="proc-fchip" onclick="setProcFilter(this)">Críticos</button>
+      </div>
+
+      <div class="proc-list" id="proc-list">
+
+        <div class="proc-row">
+          <div class="proc-check" onclick="toggleCheck(this)"></div>
+          <div class="proc-info">
+            <p class="proc-name">Silva &amp; Construções × Banco Nacional</p>
+            <p class="proc-cnj">0001234-56.2024.8.26.0100</p>
+          </div>
+          <div class="proc-right">
+            <span class="badge badge-tag badge-secondary">Contestação</span>
+            <span class="badge badge-pill badge-error" style="font-size:10px;">Hoje</span>
+          </div>
+        </div>
+
+        <div class="proc-row">
+          <div class="proc-check" onclick="toggleCheck(this)"></div>
+          <div class="proc-info">
+            <p class="proc-name">Oliveira &amp; Filhos × Fornecedor XYZ</p>
+            <p class="proc-cnj">0005678-12.2024.8.26.0100</p>
+          </div>
+          <div class="proc-right">
+            <span class="badge badge-tag badge-secondary">Petição</span>
+            <span class="badge badge-pill badge-warning" style="font-size:10px;">3 dias</span>
+          </div>
+        </div>
+
+        <div class="proc-row">
+          <div class="proc-check" onclick="toggleCheck(this)"></div>
+          <div class="proc-info">
+            <p class="proc-name">Transportadora Norte × Seguros ABC</p>
+            <p class="proc-cnj">0009012-34.2023.8.26.0053</p>
+          </div>
+          <div class="proc-right">
+            <span class="badge badge-tag badge-secondary">Recurso</span>
+            <span class="badge badge-pill badge-success" style="font-size:10px;">14 dias</span>
+          </div>
+        </div>
+
+        <div class="proc-row">
+          <div class="proc-check" onclick="toggleCheck(this)"></div>
+          <div class="proc-info">
+            <p class="proc-name">Imobiliária Central × Construtora Delta</p>
+            <p class="proc-cnj">0003456-78.2024.8.26.0100</p>
+          </div>
+          <div class="proc-right">
+            <span class="badge badge-tag badge-secondary">Manifestação</span>
+            <span class="badge badge-pill badge-success" style="font-size:10px;">21 dias</span>
+          </div>
+        </div>
+
+        <div class="proc-row">
+          <div class="proc-check" onclick="toggleCheck(this)"></div>
+          <div class="proc-info">
+            <p class="proc-name">Clínica Médica São Paulo × Plano</p>
+            <p class="proc-cnj">0007890-11.2024.8.26.0100</p>
+          </div>
+          <div class="proc-right">
+            <span class="badge badge-tag badge-secondary">Apelação</span>
+            <span class="badge badge-pill badge-success" style="font-size:10px;">28 dias</span>
+          </div>
+        </div>
+
+      </div><!-- /proc-list -->
+
+      <!-- Float bar -->
+      <div class="float-bar" id="float-bar">
+        <span class="float-bar-text" id="float-text">0 processos selecionados</span>
+        <button class="float-bar-clear" onclick="clearSelection()">Limpar seleção</button>
+        <button class="btn btn-outline btn-sm" style="color:white;border-color:rgba(255,255,255,.3);gap:5px;" onclick="openReattr()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M1 8.5c0-1.5 1.3-2.5 3-2.5"/><path d="M8.5 6v4M6.5 8h4"/></svg>
+          Reatribuir para…
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /drawer-body -->
+</div><!-- /drawer -->
+
+<!-- MODAL: Reatribuição mini -->
+<div class="modal-overlay" id="reattr-overlay" onclick="closeReattr(event)">
+  <div class="mini-modal">
+    <div class="modal-header">
+      <div>
+        <p class="modal-title">Reatribuir processos</p>
+        <p class="modal-sub-text" id="reattr-sub">Selecione o advogado destino</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeReattr()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </button>
+    </div>
+    <div id="reattr-list">
+      <div class="adv-opt" onclick="selectDestino(this,'mb')">
+        <div class="avatar av-sm av-mb">MB</div>
+        <div class="adv-opt-info"><p class="adv-opt-name">Dra. Marina Barros <span class="badge badge-tag badge-error" style="margin-left:4px;font-size:9.5px;">Sobrecarga</span></p><p class="adv-opt-load">58 processos · Carga: 116%</p></div>
+        <div class="adv-radio"></div>
+      </div>
+      <div class="adv-opt" onclick="selectDestino(this,'ca')">
+        <div class="avatar av-sm av-ca">CA</div>
+        <div class="adv-opt-info"><p class="adv-opt-name">Dr. Carlos Alves</p><p class="adv-opt-load">32 processos · Carga: 64%</p></div>
+        <div class="adv-radio"></div>
+      </div>
+      <div class="adv-opt" onclick="selectDestino(this,'jp')">
+        <div class="avatar av-sm av-jp">JP</div>
+        <div class="adv-opt-info"><p class="adv-opt-name">Dra. Julia Prado</p><p class="adv-opt-load">28 processos · Carga: 56%</p></div>
+        <div class="adv-radio"></div>
+      </div>
+      <div class="adv-opt" onclick="selectDestino(this,'ls')">
+        <div class="avatar av-sm av-ls">LS</div>
+        <div class="adv-opt-info"><p class="adv-opt-name">Dr. Lucas Silva <span class="badge badge-tag badge-success" style="margin-left:4px;font-size:9.5px;">Disponível</span></p><p class="adv-opt-load">18 processos · Carga: 36%</p></div>
+        <div class="adv-radio"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-md" onclick="closeReattr()">Cancelar</button>
+      <button class="btn btn-default btn-md" id="reattr-confirm" onclick="confirmReattr()" disabled style="opacity:.45;cursor:not-allowed;">Confirmar reatribuição</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Cadastro / Edição -->
+<div class="modal-overlay" id="cadastro-overlay" onclick="closeCadastro(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p class="modal-title" id="cad-title">Adicionar membro</p>
+        <p class="modal-sub-text">Preencha os dados do advogado</p>
+      </div>
+      <button class="btn btn-ghost btn-icon" onclick="closeCadastro()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nome completo *</label>
+          <input class="form-input" type="text" placeholder="Ex: Dr. João Silva" id="f-nome"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número OAB *</label>
+          <input class="form-input" type="text" placeholder="Ex: 123.456/SP" id="f-oab"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail *</label>
+          <input class="form-input" type="email" placeholder="joao@escritorio.com.br" id="f-email"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input class="form-input" type="tel" placeholder="(11) 99999-9999" id="f-tel"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Área de atuação *</label>
+          <select class="form-select" id="f-area">
+            <option value="">Selecione…</option>
+            <option>Cível</option>
+            <option>Trabalhista</option>
+            <option>Tributário</option>
+            <option>Empresarial</option>
+            <option>Cível + Trabalhista</option>
+            <option>Tributário + Empresarial</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Papel no sistema *</label>
+          <select class="form-select" id="f-papel">
+            <option>Advogado</option>
+            <option>Gestor</option>
+            <option>Admin</option>
+          </select>
+        </div>
+        <div class="form-divider"></div>
+        <div class="form-group span2">
+          <label class="form-label">Status da conta</label>
+          <div class="toggle-wrap">
+            <div class="toggle on" id="f-toggle" onclick="this.classList.toggle('on')"></div>
+            <span style="font-size:13px;color:hsl(var(--fg));">Membro ativo no sistema</span>
+          </div>
+          <p class="form-hint">Membros inativos não recebem atribuições e não aparecem nos dashboards.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-md" onclick="closeCadastro()">Cancelar</button>
+      <button class="btn btn-default btn-md" onclick="saveCadastro()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3 3 5-5"/></svg>
+        Salvar membro
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5l3.5 3.5 6.5-7"/></svg>
+  <span id="toast-msg">Ação concluída com sucesso</span>
+</div>
+
+<script>
+/* ══ Sidebar toggle ══ */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+/* ══ View toggle ══ */
+let currentView = 'card';
+function setView(v) {
+  currentView = v;
+  const grid = document.getElementById('adv-grid');
+  document.getElementById('btn-card').classList.toggle('active', v === 'card');
+  document.getElementById('btn-list').classList.toggle('active', v === 'list');
+  if (v === 'list') {
+    grid.classList.add('list-mode');
+    renderListView();
+  } else {
+    grid.classList.remove('list-mode');
+    renderCardView();
+  }
+}
+
+function renderCardView() {
+  // Already in DOM — just restore display
+  document.getElementById('adv-grid').innerHTML = CARD_HTML;
+}
+
+function renderListView() {
+  document.getElementById('adv-grid').innerHTML = `
+    <div class="adv-list-row list-header">
+      <div class="list-th">Advogado</div>
+      <div class="list-th">Áreas</div>
+      <div class="list-th">Ativos</div>
+      <div class="list-th">Cumprimento</div>
+      <div class="list-th">Carga</div>
+      <div class="list-th" style="text-align:right;">Ações</div>
+    </div>
+    ${LIST_ROWS}
+  `;
+}
+
+const LIST_ROWS = [
+  { id:'rf', init:'RF', cls:'av-rf', name:'Dr. Rafael Fontes', oab:'OAB/SP 123.456', area:'Cível', ativos:47, cump:'96%', carga:94, pct_cls:'warn', status:'Gestor · Você', badge:'badge-accent' },
+  { id:'mb', init:'MB', cls:'av-mb', name:'Dra. Marina Barros', oab:'OAB/SP 87.234', area:'Cível · Trabalhista', ativos:58, cump:'81%', carga:116, pct_cls:'err', status:'Sobrecarga', badge:'badge-error' },
+  { id:'ca', init:'CA', cls:'av-ca', name:'Dr. Carlos Alves', oab:'OAB/SP 54.891', area:'Tributário · Empresarial', ativos:32, cump:'100%', carga:64, pct_cls:'ok', status:'Ok', badge:'badge-success' },
+  { id:'jp', init:'JP', cls:'av-jp', name:'Dra. Julia Prado', oab:'OAB/SP 112.043', area:'Trabalhista', ativos:28, cump:'98%', carga:56, pct_cls:'ok', status:'Ok', badge:'badge-success' },
+  { id:'ls', init:'LS', cls:'av-ls', name:'Dr. Lucas Silva', oab:'OAB/SP 98.770', area:'Cível · Empresarial', ativos:18, cump:'100%', carga:36, pct_cls:'ok', status:'Disponível', badge:'badge-info' },
+].map((r,i) => `
+  <div class="adv-list-row" style="animation-delay:${.04+i*.04}s" onclick="openDrawer('${r.id}')">
+    <div class="list-name-cell">
+      <div class="avatar av-sm ${r.cls}">${r.init}</div>
+      <div class="list-name-info"><p class="list-name">${r.name}</p><p class="list-sub">${r.oab}</p></div>
+    </div>
+    <div><span class="badge badge-tag badge-secondary">${r.area}</span></div>
+    <div style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;">${r.ativos}</div>
+    <div><span class="badge badge-tag ${r.badge}">${r.cump}</span></div>
+    <div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="progress-bar" style="width:72px;"><div class="progress-fill pf-${r.pct_cls}" style="width:${Math.min(r.carga,100)}%"></div></div>
+        <span class="progress-pct ${r.pct_cls}" style="font-size:11px;">${r.carga}%</span>
+      </div>
+    </div>
+    <div class="list-actions" onclick="event.stopPropagation()">
+      <button class="btn btn-outline btn-xs" onclick="openDrawer('${r.id}')">Ver</button>
+      <button class="btn btn-ghost btn-icon-sm" onclick="openCadastro('${r.id}')" title="Editar">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2l2 2-6 6H2V8l6-6z"/></svg>
+      </button>
+    </div>
+  </div>
+`).join('');
+
+// Save card HTML so we can restore it
+const CARD_HTML = document.getElementById('adv-grid').innerHTML;
+
+/* ══ Drawer ══ */
+const DRAWER_DATA = {
+  rf: { init:'RF', cls:'av-rf', name:'Dr. Rafael Fontes', oab:'OAB/SP 123.456', area:'Cível', role:'Gestor · Você', ativos:'47', enc:'6', cump:'96%', venc:'1' },
+  mb: { init:'MB', cls:'av-mb', name:'Dra. Marina Barros', oab:'OAB/SP 87.234', area:'Cível · Trabalhista', role:'Advogado', ativos:'58', enc:'4', cump:'81%', venc:'8' },
+  ca: { init:'CA', cls:'av-ca', name:'Dr. Carlos Alves', oab:'OAB/SP 54.891', area:'Tributário · Empresarial', role:'Advogado', ativos:'32', enc:'9', cump:'100%', venc:'0' },
+  jp: { init:'JP', cls:'av-jp', name:'Dra. Julia Prado', oab:'OAB/SP 112.043', area:'Trabalhista', role:'Advogado', ativos:'28', enc:'7', cump:'98%', venc:'0' },
+  ls: { init:'LS', cls:'av-ls', name:'Dr. Lucas Silva', oab:'OAB/SP 98.770', area:'Cível · Empresarial', role:'Advogado', ativos:'18', enc:'11', cump:'100%', venc:'0' },
+};
+
+function openDrawer(id, mode) {
+  const d = DRAWER_DATA[id];
+  if (!d) return;
+  const av = document.getElementById('d-avatar');
+  av.textContent = d.init;
+  av.className = `avatar av-lg ${d.cls}`;
+  document.getElementById('d-name').textContent = d.name;
+  document.getElementById('d-oab').textContent = d.oab;
+  document.getElementById('d-area').textContent = d.area;
+  document.getElementById('d-role-badge').textContent = d.role;
+  document.getElementById('d-ativos').textContent = d.ativos;
+  document.getElementById('d-encerrados').textContent = d.enc;
+  document.getElementById('d-cumpridos').textContent = d.cump;
+  const vEl = document.getElementById('d-vencidos');
+  vEl.textContent = d.venc;
+  vEl.className = 'dkpi-value ' + (d.venc === '0' ? 'ok' : 'err');
+  clearSelection();
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (mode === 'reatribuir') setTimeout(()=>{ /* highlight checkboxes */ }, 400);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  clearSelection();
+}
+
+/* ══ Process checkbox + float bar ══ */
+let selectedCount = 0;
+function toggleCheck(el) {
+  event.stopPropagation();
+  el.classList.toggle('checked');
+  if (el.classList.contains('checked')) {
+    el.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5l2 2 4-4"/></svg>';
+    selectedCount++;
+  } else {
+    el.innerHTML = '';
+    selectedCount--;
+  }
+  updateFloatBar();
+}
+
+function updateFloatBar() {
+  const bar = document.getElementById('float-bar');
+  document.getElementById('float-text').textContent = `${selectedCount} processo${selectedCount !== 1 ? 's' : ''} selecionado${selectedCount !== 1 ? 's' : ''}`;
+  bar.classList.toggle('visible', selectedCount > 0);
+}
+
+function clearSelection() {
+  selectedCount = 0;
+  document.querySelectorAll('.proc-check').forEach(c => {
+    c.classList.remove('checked');
+    c.innerHTML = '';
+  });
+  document.getElementById('float-bar').classList.remove('visible');
+}
+
+function setProcFilter(btn) {
+  document.querySelectorAll('.proc-fchip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ══ Reatribuição mini-modal ══ */
+let selectedDestino = null;
+function openReattr() {
+  document.getElementById('reattr-sub').textContent = `${selectedCount} processo${selectedCount !== 1 ? 's' : ''} serão movidos para:`;
+  document.querySelectorAll('.adv-opt').forEach(o => o.classList.remove('sel'));
+  const btn = document.getElementById('reattr-confirm');
+  btn.disabled = true; btn.style.opacity = '.45'; btn.style.cursor = 'not-allowed';
+  selectedDestino = null;
+  document.getElementById('reattr-overlay').classList.add('open');
+}
+
+function closeReattr(e) {
+  if (!e || e.target === document.getElementById('reattr-overlay') || !e.target) {
+    document.getElementById('reattr-overlay').classList.remove('open');
+  }
+}
+
+function selectDestino(el, id) {
+  document.querySelectorAll('.adv-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedDestino = id;
+  const btn = document.getElementById('reattr-confirm');
+  btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+}
+
+function confirmReattr() {
+  const btn = document.getElementById('reattr-confirm');
+  btn.textContent = 'Reatribuindo…';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('reattr-overlay').classList.remove('open');
+    closeDrawer();
+    showToast(`${selectedCount} processo${selectedCount !== 1 ? 's' : ''} reatribuído${selectedCount !== 1 ? 's' : ''} com sucesso`);
+    btn.innerHTML = 'Confirmar reatribuição';
+  }, 800);
+}
+
+/* ══ Cadastro modal ══ */
+function openCadastro(id) {
+  event && event.stopPropagation();
+  const isEdit = !!id;
+  document.getElementById('cad-title').textContent = isEdit ? 'Editar membro' : 'Adicionar membro';
+  if (isEdit && DRAWER_DATA[id]) {
+    const d = DRAWER_DATA[id];
+    document.getElementById('f-nome').value = d.name;
+    document.getElementById('f-oab').value = d.oab;
+    document.getElementById('f-email').value = d.name.toLowerCase().replace('dr. ','').replace('dra. ','').replace(' ','.')+'@lexis.com.br';
+    document.getElementById('f-area').value = d.area.split(' · ')[0];
+    document.getElementById('f-papel').value = d.role.includes('Gestor') ? 'Gestor' : 'Advogado';
+  } else {
+    ['f-nome','f-oab','f-email','f-tel'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-area').value = '';
+    document.getElementById('f-papel').value = 'Advogado';
+    document.getElementById('f-toggle').classList.add('on');
+  }
+  document.getElementById('cadastro-overlay').classList.add('open');
+}
+
+function closeCadastro(e) {
+  if (!e || e.target === document.getElementById('cadastro-overlay') || !e.target) {
+    document.getElementById('cadastro-overlay').classList.remove('open');
+  }
+}
+
+function saveCadastro() {
+  const nome = document.getElementById('f-nome').value.trim();
+  if (!nome) { document.getElementById('f-nome').style.borderColor = 'hsl(var(--error))'; return; }
+  document.getElementById('cadastro-overlay').classList.remove('open');
+  showToast('Membro salvo com sucesso');
+}
+
+/* ══ Toast ══ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ══ ESC handlers ══ */
+document.body.classList.add("no-transition");
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove("no-transition")));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('reattr-overlay').classList.contains('open')) { closeReattr(); return; }
+    if (document.getElementById('cadastro-overlay').classList.contains('open')) { closeCadastro(); return; }
+    closeDrawer();
+  }
+});
+</script>
+
+<!-- ── Prototype Nav Bar ── -->
+<style>
+.proto-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:hsl(0 0% 9%);border:1px solid hsl(0 0% 20%);border-radius:40px;padding:6px 8px;display:flex;align-items:center;gap:4px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;font-family:"Inter",-apple-system,sans-serif;}
+.proto-nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(0 0% 35%);padding:0 8px 0 4px;border-right:1px solid hsl(0 0% 18%);margin-right:4px;white-space:nowrap;}
+.proto-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;text-decoration:none;font-size:11px;font-weight:500;color:hsl(0 0% 60%);transition:all 150ms;white-space:nowrap;border:1px solid transparent;}
+.proto-btn:hover{background:hsl(0 0% 16%);color:#f2f2f2;border-color:hsl(0 0% 22%);}
+.proto-btn.proto-active{background:hsl(33 60% 50%/.15);color:hsl(33 60% 65%);border-color:hsl(33 60% 50%/.3);}
+.proto-sep{width:1px;height:16px;background:hsl(0 0% 18%);margin:0 2px;flex-shrink:0;}
+</style>
+<nav class="proto-nav" aria-label="Navegação do protótipo">
+  <span class="proto-nav-label">Lexis MVP</span>
+  <a class="proto-btn" href="index.html">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5L5.5 1.5 10 5.5V10H7V7.5H4V10H1V5.5Z"/></svg>
+    Início
+  </a>
+  <div class="proto-sep"></div>
+  <a class="proto-btn " href="dashboard.html">Dashboard Adv.</a>
+  <a class="proto-btn " href="dashboard-gestor.html">Dashboard Gestor</a>
+  <a class="proto-btn " href="processo-detalhe.html">Processo</a>
+  <a class="proto-btn proto-active" href="equipe-gestao.html">Equipe</a>
+</nav>
+
+</body>
+</html>

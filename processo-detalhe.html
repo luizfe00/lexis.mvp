@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Detalhes do Processo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --background:0 0% 97%;--foreground:0 0% 9%;--card:0 0% 100%;--primary:0 0% 18%;
+  --primary-fg:0 0% 98%;--muted:0 0% 96%;--muted-fg:0 0% 45%;--accent:33 60% 50%;
+  --border:0 0% 83%;--ring:33 60% 50%;--radius:0.375rem;
+  --success:142 71% 45%;--success-bg:142 77% 97%;--success-border:142 60% 75%;--success-fg:142 71% 25%;
+  --warning:38 92% 50%;--warning-bg:48 100% 96%;--warning-border:38 80% 68%;--warning-fg:33 88% 28%;
+  --error:0 84% 60%;--error-bg:0 100% 97%;--error-border:0 84% 75%;--error-fg:0 72% 35%;
+  --info:199 89% 48%;--info-bg:204 100% 97%;--info-border:199 80% 72%;--info-fg:199 89% 26%;
+  --sb-bg:0 0% 11%;--sb-fg:0 0% 95%;--sb-muted:0 0% 40%;--sb-border:0 0% 17%;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --sh-xs:0 1px 2px 0 rgb(0 0 0/.05);
+  --sh-sm:0 1px 3px 0 rgb(0 0 0/.07),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-md:0 4px 6px -1px rgb(0 0 0/.07),0 2px 4px -2px rgb(0 0 0/.04);
+  --sh-focus:0 0 0 3px hsl(33 60% 50%/.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:hsl(var(--foreground));background:hsl(var(--background));display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+*{scrollbar-width:thin;scrollbar-color:hsl(var(--border)) transparent;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:4px;}
+
+/* ── Button ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:500;line-height:1;cursor:pointer;border:none;transition:all 150ms;white-space:nowrap;text-decoration:none;outline:none;font-family:var(--font-sans);}
+.btn:focus-visible{box-shadow:var(--sh-focus);}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+.btn-md{height:34px;padding:0 14px;}
+.btn-icon{width:30px;height:30px;padding:0;flex-shrink:0;}
+.btn-icon-sm{width:26px;height:26px;padding:0;flex-shrink:0;border-radius:calc(var(--radius) - 1px);}
+.btn-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.btn-default:hover{background:hsl(0 0% 23%);}
+.btn-outline{background:transparent;color:hsl(var(--foreground));border:1px solid hsl(var(--border));}
+.btn-outline:hover{background:hsl(var(--muted));}
+.btn-ghost{background:transparent;color:hsl(var(--muted-fg));border:none;}
+.btn-ghost:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
+.btn-link{background:transparent;border:none;color:hsl(var(--accent));padding:0;height:auto;font-size:12px;font-weight:500;}
+.btn-link:hover{opacity:.75;text-decoration:underline;}
+.btn-success{background:hsl(var(--primary));color:white;}
+.btn-success:hover{background:hsl(0 0% 22%);}
+
+/* ── Badge ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;line-height:1;white-space:nowrap;}
+.badge-pill{padding:3px 9px;border-radius:9999px;}
+.badge-tag{padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;letter-spacing:.02em;}
+.badge-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));}
+.badge-outline{background:transparent;color:hsl(var(--foreground));border:1px solid hsl(var(--border));}
+.badge-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.badge-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+.badge-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));}
+.badge-info{background:hsl(var(--info-bg));color:hsl(var(--info-fg));border:1px solid hsl(var(--info-border));}
+.badge-accent{background:hsl(33 60% 50%/.12);color:hsl(var(--accent));border:1px solid hsl(33 60% 50%/.28);}
+.badge-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.badge-destructive{background:hsl(var(--error));color:white;}
+
+/* ── Card ── */
+.card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);box-shadow:var(--sh-sm);overflow:hidden;}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid hsl(var(--border));}
+.card-title{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:hsl(var(--foreground));}
+.card-dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--accent));flex-shrink:0;}
+
+/* ── Avatar ── */
+.avatar{border-radius:9999px;background:linear-gradient(135deg,hsl(var(--accent)) 0%,hsl(30 55% 35%) 100%);display:flex;align-items:center;justify-content:center;color:white;font-weight:600;flex-shrink:0;}
+.avatar-xs{width:20px;height:20px;font-size:8px;}
+.avatar-sm{width:28px;height:28px;font-size:10px;}
+.avatar-md{width:34px;height:34px;font-size:12px;}
+
+/* ══════════ SIDEBAR ══════════ */
+.sidebar{width:220px;min-height:100vh;flex-shrink:0;background:hsl(var(--sb-bg));display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.sidebar::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,hsl(33 60% 50%/.14) 0%,transparent 70%);pointer-events:none;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:16px 16px 14px;border-bottom:1px solid hsl(var(--sb-border));cursor:pointer;}
+.logo-orb{width:30px;height:30px;border-radius:50%;background:hsl(var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+.logo-orb::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:hsl(var(--sb-bg));}
+.logo-name{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;color:hsl(var(--sb-fg));}
+.logo-sub{display:block;font-size:8.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:hsl(var(--accent));margin-top:2px;}
+.nav-sec{padding:12px 10px 6px;}
+.nav-label{padding:0 8px;margin-bottom:4px;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:hsl(var(--sb-muted));}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:calc(var(--radius) - 1px);color:hsl(0 0% 58%);font-size:13px;font-weight:450;cursor:pointer;transition:background 150ms,color 150ms;text-decoration:none;}
+.nav-item:hover{background:hsl(0 0% 100%/.05);color:hsl(var(--sb-fg));}
+.nav-item.active{background:hsl(33 60% 50%/.13);color:hsl(var(--accent));}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.7;}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-badge{min-width:18px;height:18px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;padding:0 5px;background:hsl(var(--error));color:white;margin-left:auto;}
+.nav-badge.am{background:hsl(var(--accent));}
+.sb-sep{height:1px;background:hsl(var(--sb-border));margin:6px 16px;}
+.sb-spacer{flex:1;}
+.sb-footer{padding:10px;border-top:1px solid hsl(var(--sb-border));}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:calc(var(--radius) - 1px);cursor:pointer;transition:background 150ms;}
+.user-row:hover{background:hsl(0 0% 100%/.05);}
+.user-name{font-size:12px;font-weight:600;color:hsl(var(--sb-fg));}
+.user-role{font-size:10px;color:hsl(var(--sb-muted));margin-top:1px;}
+
+/* ══════════ MAIN ══════════ */
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
+
+/* Topbar */
+.topbar{height:48px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0;}
+.breadcrumb{display:flex;align-items:center;gap:6px;flex:1;font-size:12.5px;color:hsl(var(--muted-fg));}
+.breadcrumb a{color:hsl(var(--muted-fg));text-decoration:none;transition:color 120ms;}
+.breadcrumb a:hover{color:hsl(var(--foreground));}
+.bc-sep{opacity:.4;}
+.bc-cur{color:hsl(var(--foreground));font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:340px;}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:hsl(var(--success-fg));background:hsl(var(--success-bg));border:1px solid hsl(var(--success-border));padding:3px 9px;border-radius:9999px;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:hsl(var(--success));animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Process Header */
+.ph{background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));padding:14px 20px 0;flex-shrink:0;}
+.ph-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;}
+.ph-left{flex:1;min-width:0;}
+.ph-badges{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
+.ph-title{font-family:var(--font-serif);font-size:19px;letter-spacing:-.02em;color:hsl(var(--foreground));line-height:1.25;margin-bottom:5px;}
+.ph-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:hsl(var(--muted-fg));}
+.ph-sep{opacity:.35;}
+.ph-cnj{font-family:var(--font-mono);font-size:11.5px;}
+.ph-actions{display:flex;align-items:center;gap:5px;flex-shrink:0;padding-top:2px;}
+.ph-divider{width:1px;height:20px;background:hsl(var(--border));margin:0 2px;}
+
+/* Tabs */
+.ph-tabs{display:flex;margin-top:12px;}
+.ptab{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;font-size:13px;font-weight:500;color:hsl(var(--muted-fg));cursor:pointer;border:none;background:transparent;position:relative;transition:color 150ms;font-family:var(--font-sans);white-space:nowrap;}
+.ptab::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:transparent;transition:background 150ms;}
+.ptab:hover{color:hsl(var(--foreground));}
+.ptab.active{color:hsl(var(--foreground));font-weight:600;}
+.ptab.active::after{background:hsl(var(--accent));}
+.ptab-n{font-size:10px;font-weight:600;background:hsl(var(--muted));color:hsl(var(--muted-fg));padding:1px 6px;border-radius:9999px;border:1px solid hsl(var(--border));}
+.ptab.active .ptab-n{background:hsl(33 60% 50%/.12);color:hsl(var(--accent));border-color:hsl(33 60% 50%/.25);}
+
+/* Alert Banner */
+.alert-banner{display:flex;align-items:center;gap:12px;margin:14px 20px 0;padding:11px 14px;background:hsl(var(--error-bg));border:1px solid hsl(var(--error-border));border-left:3px solid hsl(var(--error));border-radius:var(--radius);animation:slideDown .25s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.alert-icon{color:hsl(var(--error-fg));flex-shrink:0;}
+.alert-body{flex:1;min-width:0;}
+.alert-title{font-size:13px;font-weight:600;color:hsl(var(--error-fg));margin-bottom:2px;}
+.alert-sub{font-size:11.5px;color:hsl(var(--error-fg));opacity:.75;}
+.alert-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+/* Content */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px 32px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ══════════ VISÃO GERAL ══════════ */
+.ov-grid{display:grid;grid-template-columns:1fr 308px;gap:14px;align-items:start;}
+.ov-left,.ov-right{display:flex;flex-direction:column;gap:14px;}
+
+.data-grid{display:grid;grid-template-columns:1fr 1fr;}
+.dc{padding:11px 16px;border-bottom:1px solid hsl(var(--border));border-right:1px solid hsl(var(--border));}
+.dc:nth-child(2n){border-right:none;}
+.dc:nth-last-child(-n+2){border-bottom:none;}
+.dc-label{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:4px;}
+.dc-val{font-size:13px;font-weight:500;color:hsl(var(--foreground));}
+.dc-val.mono{font-family:var(--font-mono);font-size:11.5px;}
+
+.mini-tl-item{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid hsl(var(--border));}
+.mini-tl-item:last-child{border-bottom:none;}
+.m-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;box-shadow:0 0 0 3px transparent;}
+.m-dot.w{background:hsl(var(--warning));box-shadow:0 0 0 3px hsl(var(--warning)/.15);}
+.m-dot.i{background:hsl(var(--info));box-shadow:0 0 0 3px hsl(var(--info)/.15);}
+.m-dot.s{background:hsl(var(--success));box-shadow:0 0 0 3px hsl(var(--success)/.15);}
+.m-dot.e{background:hsl(var(--error));box-shadow:0 0 0 3px hsl(var(--error)/.15);}
+.m-dot.a{background:hsl(var(--accent));box-shadow:0 0 0 3px hsl(33 60% 50%/.15);}
+.m-body{flex:1;min-width:0;}
+.m-header{display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap;}
+.m-date{font-size:11px;color:hsl(var(--muted-fg));}
+.m-title{font-size:13px;font-weight:500;color:hsl(var(--foreground));line-height:1.35;}
+.m-text{font-size:12px;color:hsl(var(--muted-fg));line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+.parte-row{display:flex;align-items:flex-start;gap:10px;padding:11px 16px;border-bottom:1px solid hsl(var(--border));}
+.parte-row:last-child{border-bottom:none;}
+.parte-polo{width:58px;flex-shrink:0;padding-top:1px;}
+.parte-name{font-size:13px;font-weight:500;color:hsl(var(--foreground));margin-bottom:3px;}
+.parte-adv{font-size:11.5px;color:hsl(var(--muted-fg));}
+
+.aud-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid hsl(var(--border));}
+.aud-row:last-child{border-bottom:none;}
+.aud-box{width:42px;text-align:center;flex-shrink:0;background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:calc(var(--radius) - 1px);padding:5px 4px;}
+.aud-day{font-size:19px;font-weight:700;line-height:1;color:hsl(var(--foreground));font-family:var(--font-serif);}
+.aud-month{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(var(--muted-fg));}
+.aud-info{flex:1;min-width:0;}
+.aud-title{font-size:13px;font-weight:500;color:hsl(var(--foreground));margin-bottom:2px;}
+.aud-meta{font-size:11.5px;color:hsl(var(--muted-fg));}
+.aud-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.aud-time{font-size:12px;font-weight:600;color:hsl(var(--foreground));font-variant-numeric:tabular-nums;}
+
+.nota-row{padding:11px 16px;border-bottom:1px solid hsl(var(--border));}
+.nota-row:last-child{border-bottom:none;}
+.nota-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.nota-author{font-size:11.5px;font-weight:600;color:hsl(var(--foreground));}
+.nota-date{font-size:10.5px;color:hsl(var(--muted-fg));margin-left:auto;}
+.nota-text{font-size:12.5px;color:hsl(var(--muted-fg));line-height:1.6;}
+
+/* ══════════ MOVIMENTAÇÕES ══════════ */
+.mov-filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;}
+.fchip{display:inline-flex;align-items:center;padding:4px 11px;border-radius:9999px;font-size:12px;font-weight:500;color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));cursor:pointer;transition:all 150ms;background:transparent;font-family:var(--font-sans);}
+.fchip:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
+.fchip.active{background:hsl(var(--primary));color:hsl(var(--primary-fg));border-color:hsl(var(--primary));}
+
+.timeline{position:relative;padding-left:24px;}
+.timeline::before{content:'';position:absolute;left:7px;top:14px;bottom:14px;width:1px;background:hsl(var(--border));}
+.tl-item{position:relative;margin-bottom:10px;animation:fadeUp .3s ease both;}
+.tl-item:nth-child(1){animation-delay:.04s}.tl-item:nth-child(2){animation-delay:.08s}
+.tl-item:nth-child(3){animation-delay:.12s}.tl-item:nth-child(4){animation-delay:.16s}
+.tl-item:nth-child(5){animation-delay:.20s}
+.tl-dot{position:absolute;left:-20px;top:13px;width:10px;height:10px;border-radius:50%;z-index:1;background:hsl(var(--card));border:2px solid hsl(var(--border));}
+.tl-dot.w{border-color:hsl(var(--warning));background:hsl(var(--warning-bg));}
+.tl-dot.i{border-color:hsl(var(--info));background:hsl(var(--info-bg));}
+.tl-dot.e{border-color:hsl(var(--error));background:hsl(var(--error-bg));}
+.tl-dot.s{border-color:hsl(var(--success));background:hsl(var(--success-bg));}
+.tl-dot.a{border-color:hsl(var(--accent));background:hsl(33 60% 50%/.1);}
+.tl-card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);overflow:hidden;transition:box-shadow 150ms;}
+.tl-card:hover{box-shadow:var(--sh-md);}
+.tl-head{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 14px;background:hsl(var(--muted)/.5);border-bottom:1px solid hsl(var(--border));}
+.tl-head-l{display:flex;align-items:center;gap:8px;}
+.tl-date{font-size:11.5px;font-weight:600;color:hsl(var(--muted-fg));font-variant-numeric:tabular-nums;}
+.tl-src{font-size:11px;color:hsl(var(--muted-fg));opacity:.65;}
+.tl-body{padding:12px 14px;}
+.tl-title{font-size:13.5px;font-weight:600;color:hsl(var(--foreground));margin-bottom:5px;}
+.tl-text{font-size:12.5px;color:hsl(var(--muted-fg));line-height:1.6;font-style:italic;border-left:2px solid hsl(var(--border));padding-left:10px;margin-top:6px;}
+
+.pi{display:flex;align-items:center;gap:10px;margin:0 14px 12px;padding:9px 12px;border-radius:calc(var(--radius) - 1px);border:1px solid;}
+.pi.urg{background:hsl(var(--error-bg));border-color:hsl(var(--error-border));border-left:3px solid hsl(var(--error));}
+.pi.atc{background:hsl(var(--warning-bg));border-color:hsl(var(--warning-border));border-left:3px solid hsl(var(--warning));}
+.pi.cum{background:hsl(var(--muted));border-color:hsl(var(--border));border-left:3px solid hsl(var(--border));opacity:.6;}
+.pi-body{flex:1;min-width:0;}
+.pi-title{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:12.5px;font-weight:600;color:hsl(var(--foreground));margin-bottom:2px;}
+.pi.cum .pi-title{text-decoration:line-through;color:hsl(var(--muted-fg));}
+.pi-meta{font-size:11.5px;color:hsl(var(--muted-fg));}
+.pi-action{flex-shrink:0;}
+
+/* ══════════ PRAZOS ══════════ */
+.prazos-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.prazos-toolbar-l{display:flex;align-items:center;gap:8px;}
+.prazos-list{display:flex;flex-direction:column;gap:8px;}
+.pc{display:flex;align-items:center;gap:14px;padding:14px 16px;background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);box-shadow:var(--sh-xs);transition:box-shadow 150ms;}
+.pc:hover{box-shadow:var(--sh-sm);}
+.pc.urg{border-left:3px solid hsl(var(--error));}
+.pc.atc{border-left:3px solid hsl(var(--warning));}
+.pc.ok{border-left:3px solid hsl(var(--success));}
+.pc.cum{border-left:3px solid hsl(var(--border));opacity:.65;}
+.pc-date{width:52px;flex-shrink:0;text-align:center;}
+.pc-day{font-size:24px;font-weight:700;line-height:1;font-family:var(--font-serif);color:hsl(var(--foreground));font-variant-numeric:tabular-nums;}
+.pc-month{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:hsl(var(--muted-fg));}
+.pc.urg .pc-day{color:hsl(var(--error));}
+.pc.atc .pc-day{color:hsl(var(--warning));}
+.pc-info{flex:1;min-width:0;}
+.pc-title{font-size:13.5px;font-weight:600;color:hsl(var(--foreground));margin-bottom:3px;}
+.pc-meta{font-size:12px;color:hsl(var(--muted-fg));}
+.pc.cum .pc-title{text-decoration:line-through;color:hsl(var(--muted-fg));}
+.pc-action{flex-shrink:0;display:flex;align-items:center;gap:8px;}
+
+/* ══════════ DOCUMENTOS ══════════ */
+.docs-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
+.doc-card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--sh-xs);transition:box-shadow 150ms,transform 150ms;cursor:pointer;}
+.doc-card:hover{box-shadow:var(--sh-md);transform:translateY(-1px);}
+.doc-card.up{border-style:dashed;background:transparent;align-items:center;justify-content:center;min-height:128px;gap:7px;cursor:pointer;}
+.doc-card.up:hover{background:hsl(var(--muted));box-shadow:none;transform:none;}
+.doc-icon{width:38px;height:38px;border-radius:calc(var(--radius) - 1px);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.di-pdf{background:hsl(0 84% 60%/.1);}
+.di-word{background:hsl(199 89% 48%/.1);}
+.di-zip{background:hsl(var(--warning-bg));}
+.doc-name{font-size:13px;font-weight:500;color:hsl(var(--foreground));line-height:1.35;flex:1;}
+.doc-meta{font-size:11px;color:hsl(var(--muted-fg));}
+.doc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid hsl(var(--border));}
+
+svg{display:block;}
+:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-orb"></div>
+    <div><span class="logo-name">LEXIS</span><span class="logo-sub">Escritório Digital</span></div>
+  </div>
+  <nav class="nav-sec">
+    <p class="nav-label">Principal</p>
+    <a class="nav-item" href="dashboard.html">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6L7.5 1.5 13.5 6V13A.5.5 0 0113 13.5H9.5V10H5.5V13.5H2A.5.5 0 011.5 13V6Z"/></svg>
+      Início
+    </a>
+    <a class="nav-item active" href="processo-detalhe.html">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="12" height="12" rx="1.5"/><path d="M4.5 7.5h6M4.5 5h3M4.5 10h4.5"/></svg>
+      Processos
+      <span class="nav-badge am">47</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4.5V8l2 2"/></svg>
+      Prazos
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2H13.5l-1-2z"/><path d="M5.5 13.5h4"/></svg>
+      Intimações
+      <span class="nav-badge">8</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="12" height="11" rx="1.5"/><path d="M4.5 1.5v2M10.5 1.5v2M1.5 6.5h12"/></svg>
+      Agenda
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h10M2.5 7.5H9M2.5 11h5"/></svg>
+      Tarefas
+      <span class="nav-badge am">5</span>
+    </a>
+  </nav>
+  <div class="sb-sep"></div>
+  <nav class="nav-sec">
+    <p class="nav-label">Sistema</p>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 2v2M7.5 11v2M2 7.5h2M11 7.5h2"/><circle cx="7.5" cy="7.5" r="2.5"/></svg>
+      Integrações
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 9.5a2 2 0 100-4 2 2 0 000 4z"/><path d="M13.2 8.2a1 1 0 00.2 1.1l.05.05a1.2 1.2 0 010 1.7 1.2 1.2 0 01-1.7 0l-.05-.05a1 1 0 00-1.1-.2 1 1 0 00-.6.92V12a1.2 1.2 0 01-2.4 0v-.07A1 1 0 006.7 11a1 1 0 00-1.1.2l-.05.05a1.2 1.2 0 01-1.7-1.7l.05-.05A1 1 0 004.1 8.4a1 1 0 00-.92-.6H3a1.2 1.2 0 010-2.4h.07A1 1 0 004 4.3a1 1 0 00-.2-1.1l-.05-.05a1.2 1.2 0 011.7-1.7l.05.05A1 1 0 006.6 1.7a1 1 0 00.6-.92V.7a1.2 1.2 0 012.4 0v.07a1 1 0 00.6.92 1 1 0 001.1-.2l.05-.05a1.2 1.2 0 011.7 1.7l-.05.05a1 1 0 00-.2 1.1 1 1 0 00.92.6H14a1.2 1.2 0 010 2.4h-.07a1 1 0 00-.92.6z"/></svg>
+      Configurações
+    </a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-footer">
+    <div class="user-row">
+      <div class="avatar avatar-sm">RF</div>
+      <div><p class="user-name">Dr. Rafael Fontes</p><p class="user-role">OAB/SP 123.456</p></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="breadcrumb">
+      <a href="#">Processos</a><span class="bc-sep">›</span>
+      <a href="#">TJSP</a><span class="bc-sep">›</span>
+      <span class="bc-cur">Silva &amp; Construções × Banco Nacional</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="sync-pill"><span class="sync-dot"></span>TJSP · há 12 min</div>
+      <button class="btn btn-ghost btn-icon" aria-label="Notificações" style="position:relative;">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5a5 5 0 00-5 5v2.5l-1 1.5h12l-1-1.5V6.5a5 5 0 00-5-5z"/><path d="M6 12.5a1.5 1.5 0 003 0"/></svg>
+        <span style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:hsl(var(--error));border:1.5px solid hsl(var(--card));"></span>
+      </button>
+      <div class="avatar avatar-md" style="cursor:pointer;">RF</div>
+    </div>
+  </header>
+
+  <!-- Process Header -->
+  <div class="ph">
+    <div class="ph-row">
+      <div class="ph-left">
+        <div class="ph-badges">
+          <button class="btn btn-ghost btn-sm" style="padding:0 6px;margin-left:-6px;color:hsl(var(--muted-fg));gap:3px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 11L5 7l4-4"/></svg>
+            Voltar
+          </button>
+          <span class="badge badge-pill badge-success">● Ativo</span>
+          <span class="badge badge-pill badge-error" style="font-weight:700;">⚠ Prazo hoje</span>
+          <span class="badge badge-tag badge-secondary">Ação de Cobrança</span>
+        </div>
+        <h1 class="ph-title">Silva &amp; Construções Ltda. × Banco Nacional S/A</h1>
+        <div class="ph-meta">
+          <span class="ph-cnj">0001234-56.2024.8.26.0100</span>
+          <span class="ph-sep">·</span>
+          <span>TJSP · 3ª Vara Cível do Foro Central</span>
+          <span class="ph-sep">·</span>
+          <span>Distribuído 14/01/2024</span>
+          <span class="ph-sep">·</span>
+          <span>Valor: <strong style="color:hsl(var(--foreground));font-weight:600;">R$ 284.500,00</strong></span>
+        </div>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-outline btn-sm" style="gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v3l1.5 1.5"/><path d="M3.5 8.5L2 10"/></svg>
+          Sincronizar
+        </button>
+        <div class="ph-divider"></div>
+        <button class="btn btn-outline btn-icon" title="Adicionar prazo">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v5M4 6.5h5"/></svg>
+        </button>
+        <button class="btn btn-outline btn-icon" title="Registrar anotação">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 1.5H4a1 1 0 00-1 1v8a1 1 0 001 1h5a1 1 0 001-1v-8a1 1 0 00-1-1z"/><path d="M4.5 4.5h4M4.5 6.5h3"/></svg>
+        </button>
+        <button class="btn btn-outline btn-icon" title="Upload de documento">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9v1.5A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5V9"/><path d="M6.5 1v7M4 4l2.5-3L9 4"/></svg>
+        </button>
+        <button class="btn btn-outline btn-icon" title="Exportar PDF">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 11.5H3a1 1 0 01-1-1V2a1 1 0 011-1h5l3 3v7.5a1 1 0 01-1 1H9"/><path d="M7 1v3h3"/><path d="M6.5 7v4.5M4.5 9.5l2 2 2-2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="ph-tabs" role="tablist">
+      <button class="ptab active" onclick="switchTab(0)">Visão Geral</button>
+      <button class="ptab" onclick="switchTab(1)">Movimentações <span class="ptab-n">24</span></button>
+      <button class="ptab" onclick="switchTab(2)">Prazos <span class="ptab-n">4</span></button>
+      <button class="ptab" onclick="switchTab(3)">Documentos <span class="ptab-n">7</span></button>
+    </div>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner" id="ab" role="alert">
+    <div class="alert-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 2.5L1.5 15.5h15L9 2.5z"/><path d="M9 8v4"/><circle cx="9" cy="13.5" r=".8" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <div class="alert-body">
+      <p class="alert-title">Prazo fatal — Contestação vence hoje às 23:59</p>
+      <p class="alert-sub">Gerado pela Citação de 15/02/2025 · 15 dias úteis · 0001234-56.2024.8.26.0100</p>
+    </div>
+    <div class="alert-actions">
+      <button class="btn btn-success btn-sm" onclick="cumprir()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3 3 5-5"/></svg>
+        Marcar cumprido
+      </button>
+      <button class="btn btn-ghost btn-icon-sm" onclick="fecharAlert()" title="Fechar">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l8 8M10 2L2 10"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ═══ ABA 0: VISÃO GERAL ═══ -->
+    <div id="t0" class="tab-panel active">
+      <div class="ov-grid">
+        <div class="ov-left">
+
+          <!-- Dados -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-dot"></span>Dados do Processo</h2>
+              <span class="badge badge-tag badge-info">Fase: Conhecimento</span>
+            </div>
+            <div class="data-grid">
+              <div class="dc"><p class="dc-label">Número CNJ</p><p class="dc-val mono">0001234-56.2024.8.26.0100</p></div>
+              <div class="dc"><p class="dc-label">Tribunal / Vara</p><p class="dc-val">TJSP · 3ª Vara Cível</p></div>
+              <div class="dc"><p class="dc-label">Classe Processual</p><p class="dc-val">Ação de Cobrança</p></div>
+              <div class="dc"><p class="dc-label">Assunto Principal</p><p class="dc-val">Inadimplemento / Mora</p></div>
+              <div class="dc"><p class="dc-label">Data de Distribuição</p><p class="dc-val">14 de janeiro de 2024</p></div>
+              <div class="dc"><p class="dc-label">Valor da Causa</p><p class="dc-val">R$ 284.500,00</p></div>
+              <div class="dc"><p class="dc-label">Comarca</p><p class="dc-val">São Paulo · Foro Central</p></div>
+              <div class="dc"><p class="dc-label">Última Movimentação</p><p class="dc-val">15/02/2025 · DJE-SP</p></div>
+            </div>
+          </div>
+
+          <!-- Movimentações recentes -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-dot"></span>Movimentações Recentes</h2>
+              <button class="btn btn-link" onclick="switchTab(1)">Ver todas →</button>
+            </div>
+            <div>
+              <div class="mini-tl-item">
+                <div class="m-dot w"></div>
+                <div class="m-body">
+                  <div class="m-header"><span class="m-date">15/02/2025</span><span class="badge badge-tag badge-warning">Intimação</span></div>
+                  <p class="m-title">Citação — Prazo para contestação: 15 dias</p>
+                  <p class="m-text">Fica o réu intimado para apresentar contestação no prazo legal de 15 dias úteis, sob pena de revelia.</p>
+                </div>
+              </div>
+              <div class="mini-tl-item">
+                <div class="m-dot i"></div>
+                <div class="m-body">
+                  <div class="m-header"><span class="m-date">08/02/2025</span><span class="badge badge-tag badge-info">Despacho</span></div>
+                  <p class="m-title">Vista às partes para manifestação sobre documentos</p>
+                  <p class="m-text">Cite-se o réu. Prazo de 5 dias para manifestação do autor sobre documentos juntados às fls. 45–78.</p>
+                </div>
+              </div>
+              <div class="mini-tl-item">
+                <div class="m-dot s"></div>
+                <div class="m-body">
+                  <div class="m-header"><span class="m-date">14/01/2024</span><span class="badge badge-tag badge-success">Distribuição</span></div>
+                  <p class="m-title">Processo distribuído — 3ª Vara Cível do Foro Central</p>
+                  <p class="m-text">Distribuição por sorteio eletrônico. Processo autuado e registrado no SAJ.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ov-left -->
+
+        <div class="ov-right">
+
+          <!-- Partes -->
+          <div class="card">
+            <div class="card-header"><h2 class="card-title"><span class="card-dot"></span>Partes</h2></div>
+            <div>
+              <div class="parte-row">
+                <div class="parte-polo"><span class="badge badge-tag badge-info">Ativo</span></div>
+                <div><p class="parte-name">Banco Nacional S/A</p><p class="parte-adv">Dra. Camila Rocha · OAB/SP 98.321</p></div>
+              </div>
+              <div class="parte-row">
+                <div class="parte-polo"><span class="badge badge-tag badge-secondary">Passivo</span></div>
+                <div><p class="parte-name">Silva &amp; Construções Ltda.</p><p class="parte-adv">Dr. Rafael Fontes · OAB/SP 123.456</p></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audiências -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-dot"></span>Audiências</h2>
+              <button class="btn btn-link">Ver agenda</button>
+            </div>
+            <div>
+              <div class="aud-row">
+                <div class="aud-box"><p class="aud-day">18</p><p class="aud-month">Mar</p></div>
+                <div class="aud-info"><p class="aud-title">Audiência de Conciliação</p><p class="aud-meta">3ª Vara Cível · Sala 12</p></div>
+                <div class="aud-right"><p class="aud-time">09:30</p><span class="badge badge-tag badge-accent">Presencial</span></div>
+              </div>
+              <div class="aud-row">
+                <div class="aud-box"><p class="aud-day">04</p><p class="aud-month">Abr</p></div>
+                <div class="aud-info"><p class="aud-title">Audiência de Instrução</p><p class="aud-meta">Telepresencial · link a confirmar</p></div>
+                <div class="aud-right"><p class="aud-time">14:00</p><span class="badge badge-tag badge-success">Online</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Anotações -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><span class="card-dot"></span>Anotações</h2>
+              <button class="btn btn-outline btn-sm" style="gap:4px;">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5.5 2v7M2 5.5h7"/></svg>
+                Nova
+              </button>
+            </div>
+            <div>
+              <div class="nota-row">
+                <div class="nota-meta">
+                  <div class="avatar avatar-xs">RF</div>
+                  <span class="nota-author">Dr. Rafael Fontes</span>
+                  <span class="nota-date">Hoje, 08:42</span>
+                </div>
+                <p class="nota-text">Verificar com o cliente documentos adicionais para a contestação. Contrato original e notas fiscais são essenciais para a tese.</p>
+              </div>
+              <div class="nota-row">
+                <div class="nota-meta">
+                  <div class="avatar avatar-xs">RF</div>
+                  <span class="nota-author">Dr. Rafael Fontes</span>
+                  <span class="nota-date">12/02/2025</span>
+                </div>
+                <p class="nota-text">Banco juntou extratos bancários às fls. 45–78. Solicitar extrato da conta corrente de jan–jun/2023 para contraditar. Checar cláusula 8.3 do contrato — possível abusividade.</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ov-right -->
+      </div>
+    </div>
+
+    <!-- ═══ ABA 1: MOVIMENTAÇÕES ═══ -->
+    <div id="t1" class="tab-panel">
+      <div class="mov-filters">
+        <button class="fchip active" onclick="setFilter(this)">Todos (24)</button>
+        <button class="fchip" onclick="setFilter(this)">Intimação (5)</button>
+        <button class="fchip" onclick="setFilter(this)">Decisão (3)</button>
+        <button class="fchip" onclick="setFilter(this)">Despacho (7)</button>
+        <button class="fchip" onclick="setFilter(this)">Juntada (8)</button>
+        <button class="fchip" onclick="setFilter(this)">Outros (1)</button>
+      </div>
+
+      <div class="timeline">
+
+        <!-- 1 — Intimação + prazo urgente -->
+        <div class="tl-item">
+          <div class="tl-dot w"></div>
+          <div class="tl-card">
+            <div class="tl-head">
+              <div class="tl-head-l">
+                <span class="tl-date">15 de fevereiro de 2025 · 14:32</span>
+                <span class="badge badge-tag badge-warning">Intimação</span>
+              </div>
+              <span class="tl-src">DJE-SP · Diário Oficial</span>
+            </div>
+            <div class="tl-body">
+              <p class="tl-title">Citação — Prazo para contestação</p>
+              <p class="tl-text">"Fica o réu, SILVA &amp; CONSTRUÇÕES LTDA., devidamente citado e intimado para, querendo, apresentar contestação no prazo legal de 15 (quinze) dias úteis, contados da juntada do mandado aos autos, sob pena de revelia."</p>
+            </div>
+            <div class="pi urg" id="pi1">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="hsl(var(--error-fg))" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 2L1.5 13h12L7.5 2z"/><path d="M7.5 6v4"/><circle cx="7.5" cy="11" r=".7" fill="hsl(var(--error-fg))" stroke="none"/></svg>
+              <div class="pi-body">
+                <p class="pi-title">Contestação <span class="badge badge-pill badge-error" style="font-size:10px;">Vence hoje</span></p>
+                <p class="pi-meta">Prazo fatal: 01/03/2025 às 23:59 · 15 dias úteis a partir de 15/02/2025</p>
+              </div>
+              <div class="pi-action">
+                <button class="btn btn-success btn-sm" onclick="cumprir()">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3 3 5-5"/></svg>
+                  Marcar cumprido
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 — Decisão + prazo atenção -->
+        <div class="tl-item">
+          <div class="tl-dot e"></div>
+          <div class="tl-card">
+            <div class="tl-head">
+              <div class="tl-head-l">
+                <span class="tl-date">20 de janeiro de 2025 · 16:10</span>
+                <span class="badge badge-tag badge-error">Decisão</span>
+              </div>
+              <span class="tl-src">DJE-SP</span>
+            </div>
+            <div class="tl-body">
+              <p class="tl-title">Tutela antecipada — Indeferida</p>
+              <p class="tl-text">"Indefiro o pedido de tutela antecipada pleiteado pela parte autora, por ausência dos requisitos do art. 300 do CPC. Aguarde-se o contraditório."</p>
+            </div>
+            <div class="pi atc">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="hsl(var(--warning-fg))" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 5v3.5l2 2"/></svg>
+              <div class="pi-body">
+                <p class="pi-title">Agravo de Instrumento (facultativo) <span class="badge badge-pill badge-warning" style="font-size:10px;">3 dias restantes</span></p>
+                <p class="pi-meta">Prazo: 04/03/2025 · 15 dias a partir de 20/01/2025</p>
+              </div>
+              <div class="pi-action">
+                <button class="btn btn-outline btn-sm">Analisar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 — Despacho + prazo cumprido -->
+        <div class="tl-item">
+          <div class="tl-dot i"></div>
+          <div class="tl-card">
+            <div class="tl-head">
+              <div class="tl-head-l">
+                <span class="tl-date">08 de fevereiro de 2025 · 11:05</span>
+                <span class="badge badge-tag badge-info">Despacho</span>
+              </div>
+              <span class="tl-src">DJE-SP</span>
+            </div>
+            <div class="tl-body">
+              <p class="tl-title">Vista às partes para manifestação</p>
+              <p class="tl-text">"Cite-se o réu. Concedo prazo de 5 (cinco) dias para manifestação do autor sobre os documentos juntados pela parte contrária às fls. 45–78."</p>
+            </div>
+            <div class="pi cum">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M5 7.5l2 2 3.5-3.5"/></svg>
+              <div class="pi-body">
+                <p class="pi-title">Manifestação sobre documentos <span class="badge badge-tag badge-secondary">Cumprido</span></p>
+                <p class="pi-meta">Cumprido em 12/02/2025 · por Dr. Rafael Fontes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 — Juntada -->
+        <div class="tl-item">
+          <div class="tl-dot a"></div>
+          <div class="tl-card">
+            <div class="tl-head">
+              <div class="tl-head-l">
+                <span class="tl-date">03 de outubro de 2024 · 09:22</span>
+                <span class="badge badge-tag badge-secondary">Juntada</span>
+              </div>
+              <span class="tl-src">TJSP · SAJ</span>
+            </div>
+            <div class="tl-body">
+              <p class="tl-title">Juntada de documentos — Banco Nacional, fls. 45–78</p>
+              <p class="tl-text">Parte autora juntou extratos bancários de janeiro a junho de 2023, demonstrativos de débito e notificações extrajudiciais.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 — Distribuição -->
+        <div class="tl-item">
+          <div class="tl-dot s"></div>
+          <div class="tl-card">
+            <div class="tl-head">
+              <div class="tl-head-l">
+                <span class="tl-date">14 de janeiro de 2024 · 14:55</span>
+                <span class="badge badge-tag badge-success">Distribuição</span>
+              </div>
+              <span class="tl-src">TJSP · SAJ</span>
+            </div>
+            <div class="tl-body">
+              <p class="tl-title">Processo distribuído por sorteio eletrônico</p>
+              <p class="tl-text">Autuado e distribuído por sorteio eletrônico à 3ª Vara Cível do Foro Central da Comarca de São Paulo.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══ ABA 2: PRAZOS ═══ -->
+    <div id="t2" class="tab-panel">
+      <div class="prazos-toolbar">
+        <div class="prazos-toolbar-l">
+          <h2 style="font-size:14px;font-weight:600;color:hsl(var(--foreground));">Todos os prazos</h2>
+          <span class="badge badge-pill badge-error">1 vence hoje</span>
+        </div>
+        <button class="btn btn-outline btn-sm" style="gap:5px;">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5.5 2v7M2 5.5h7"/></svg>
+          Adicionar prazo
+        </button>
+      </div>
+      <div class="prazos-list">
+
+        <div class="pc urg" id="pc1">
+          <div class="pc-date"><p class="pc-day">01</p><p class="pc-month">Mar</p></div>
+          <div class="pc-info">
+            <p class="pc-title">Contestação</p>
+            <p class="pc-meta">Gerado pela Citação de 15/02/2025 · 15 dias úteis · Dr. Rafael Fontes</p>
+          </div>
+          <div class="pc-action">
+            <span class="badge badge-pill badge-error">Vence hoje</span>
+            <button class="btn btn-success btn-sm" onclick="cumprir()">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3 3 5-5"/></svg>
+              Marcar cumprido
+            </button>
+          </div>
+        </div>
+
+        <div class="pc atc">
+          <div class="pc-date"><p class="pc-day">04</p><p class="pc-month">Mar</p></div>
+          <div class="pc-info">
+            <p class="pc-title">Agravo de Instrumento (facultativo)</p>
+            <p class="pc-meta">Decisão de 20/01/2025 — tutela indeferida · 15 dias · Dr. Rafael Fontes</p>
+          </div>
+          <div class="pc-action">
+            <span class="badge badge-pill badge-warning">3 dias</span>
+            <button class="btn btn-outline btn-sm">Analisar</button>
+          </div>
+        </div>
+
+        <div class="pc ok">
+          <div class="pc-date"><p class="pc-day" style="font-size:20px;">18</p><p class="pc-month">Mar</p></div>
+          <div class="pc-info">
+            <p class="pc-title">Preparação para Audiência de Conciliação</p>
+            <p class="pc-meta">Lembrete interno · Audiência em 18/03/2025 às 09:30 · Dr. Rafael Fontes</p>
+          </div>
+          <div class="pc-action">
+            <span class="badge badge-pill badge-success">17 dias</span>
+            <button class="btn btn-ghost btn-sm">Ver agenda</button>
+          </div>
+        </div>
+
+        <div class="pc cum">
+          <div class="pc-date">
+            <p class="pc-day" style="font-size:20px;color:hsl(var(--muted-fg));">12</p>
+            <p class="pc-month">Fev</p>
+          </div>
+          <div class="pc-info">
+            <p class="pc-title">Manifestação sobre documentos</p>
+            <p class="pc-meta">Cumprido em 12/02/2025 · 5 dias úteis · Dr. Rafael Fontes</p>
+          </div>
+          <div class="pc-action">
+            <span class="badge badge-tag badge-secondary">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5l2 2 4-4"/></svg>
+              Cumprido
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══ ABA 3: DOCUMENTOS ═══ -->
+    <div id="t3" class="tab-panel">
+      <div class="docs-toolbar">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <h2 style="font-size:14px;font-weight:600;color:hsl(var(--foreground));">Documentos do processo</h2>
+          <span class="badge badge-tag badge-secondary">7 arquivos</span>
+        </div>
+        <button class="btn btn-outline btn-sm" style="gap:5px;">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 8.5v1A1 1 0 003 10.5h5a1 1 0 001-1v-1"/><path d="M5.5 1v6.5M3.5 3.5l2-2.5 2 2.5"/></svg>
+          Upload
+        </button>
+      </div>
+      <div class="docs-grid">
+
+        <div class="doc-card">
+          <div class="doc-icon di-pdf">📄</div>
+          <p class="doc-name">Petição Inicial — Ação de Cobrança</p>
+          <p class="doc-meta">Enviado em 14/01/2024</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">PDF · 1,2 MB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-icon di-pdf">📄</div>
+          <p class="doc-name">Contrato de Empréstimo — Via Original</p>
+          <p class="doc-meta">Enviado em 14/01/2024</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">PDF · 845 KB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-icon di-word">📝</div>
+          <p class="doc-name">Extratos Bancários Jan–Jun 2023</p>
+          <p class="doc-meta">Juntado pelo Banco em 03/10/2024</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">PDF · 2,4 MB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-icon di-zip">📦</div>
+          <p class="doc-name">Notas Fiscais 2022–2023</p>
+          <p class="doc-meta">Enviado em 03/10/2024</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">ZIP · 3,1 MB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-icon di-pdf">📄</div>
+          <p class="doc-name">Decisão — Tutela Antecipada 20/01/2025</p>
+          <p class="doc-meta">Adicionado em 22/01/2025</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">PDF · 312 KB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-icon di-word">📝</div>
+          <p class="doc-name">Manifestação sobre Documentos — 12/02</p>
+          <p class="doc-meta">Enviado em 12/02/2025</p>
+          <div class="doc-footer">
+            <span class="badge badge-tag badge-secondary">DOCX · 198 KB</span>
+            <button class="btn btn-ghost btn-icon-sm" title="Baixar"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9.5v1A1.5 1.5 0 003.5 12h6A1.5 1.5 0 0011 10.5v-1"/><path d="M6.5 2v7M4 7l2.5 3L9 7"/></svg></button>
+          </div>
+        </div>
+
+        <div class="doc-card up" role="button" tabindex="0">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="hsl(var(--muted-fg))" stroke-width="1.5" stroke-linecap="round"><path d="M11 14V5M7 8l4-4 4 4"/><path d="M19 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2"/></svg>
+          <p style="font-size:13px;font-weight:500;color:hsl(var(--muted-fg));">Adicionar arquivo</p>
+          <p style="font-size:11px;color:hsl(var(--muted-fg));opacity:.65;">PDF, DOCX, ZIP · até 50 MB</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+const TABS = ['t0','t1','t2','t3'];
+
+function switchTab(idx) {
+  TABS.forEach((id,i) => {
+    document.getElementById(id).classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.ptab').forEach((b,i) => b.classList.toggle('active', i === idx));
+}
+
+function setFilter(btn) {
+  document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function fecharAlert() {
+  const b = document.getElementById('ab');
+  b.style.transition = 'opacity .25s, transform .25s';
+  b.style.opacity = '0'; b.style.transform = 'translateY(-6px)';
+  setTimeout(() => b.remove(), 260);
+}
+
+function cumprir() {
+  // 1. Fecha banner
+  fecharAlert();
+
+  // 2. Atualiza prazo inline (aba movimentações)
+  const pi = document.getElementById('pi1');
+  if (pi) {
+    pi.className = 'pi cum';
+    pi.querySelector('.pi-title').innerHTML = 'Contestação <span class="badge badge-tag badge-secondary"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5l2 2 4-4"/></svg> Cumprido</span>';
+    pi.querySelector('.pi-meta').textContent = 'Marcado como cumprido agora · Dr. Rafael Fontes';
+    const act = pi.querySelector('.pi-action');
+    if (act) act.remove();
+    // troca ícone
+    const ico = pi.querySelector('svg');
+    if (ico) { ico.setAttribute('stroke','currentColor'); ico.innerHTML = '<circle cx="7.5" cy="7.5" r="6"/><path d="M5 7.5l2 2 3.5-3.5"/>'; }
+  }
+
+  // 3. Atualiza card de prazo (aba prazos)
+  const pc = document.getElementById('pc1');
+  if (pc) {
+    pc.className = 'pc cum';
+    pc.querySelector('.pc-title').style.textDecoration = 'line-through';
+    pc.querySelector('.pc-title').style.color = 'hsl(var(--muted-fg))';
+    pc.querySelector('.pc-day').style.color = 'hsl(var(--muted-fg))';
+    pc.querySelector('.pc-meta').textContent = 'Cumprido agora · Dr. Rafael Fontes';
+    pc.querySelector('.pc-action').innerHTML = '<span class="badge badge-tag badge-secondary"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5l2 2 4-4"/></svg> Cumprido</span>';
+  }
+}
+</script>
+
+<!-- ── Prototype Nav Bar ── -->
+<style>
+.proto-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:hsl(0 0% 9%);border:1px solid hsl(0 0% 20%);border-radius:40px;padding:6px 8px;display:flex;align-items:center;gap:4px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;font-family:"Inter",-apple-system,sans-serif;}
+.proto-nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(0 0% 35%);padding:0 8px 0 4px;border-right:1px solid hsl(0 0% 18%);margin-right:4px;white-space:nowrap;}
+.proto-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;text-decoration:none;font-size:11px;font-weight:500;color:hsl(0 0% 60%);transition:all 150ms;white-space:nowrap;border:1px solid transparent;}
+.proto-btn:hover{background:hsl(0 0% 16%);color:#f2f2f2;border-color:hsl(0 0% 22%);}
+.proto-btn.proto-active{background:hsl(33 60% 50%/.15);color:hsl(33 60% 65%);border-color:hsl(33 60% 50%/.3);}
+.proto-sep{width:1px;height:16px;background:hsl(0 0% 18%);margin:0 2px;flex-shrink:0;}
+</style>
+<nav class="proto-nav" aria-label="Navegação do protótipo">
+  <span class="proto-nav-label">Lexis MVP</span>
+  <a class="proto-btn" href="index.html">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5L5.5 1.5 10 5.5V10H7V7.5H4V10H1V5.5Z"/></svg>
+    Início
+  </a>
+  <div class="proto-sep"></div>
+  <a class="proto-btn " href="dashboard.html">Dashboard Adv.</a>
+  <a class="proto-btn " href="dashboard-gestor.html">Dashboard Gestor</a>
+  <a class="proto-btn proto-active" href="processo-detalhe.html">Processo</a>
+  <a class="proto-btn " href="equipe-gestao.html">Equipe</a>
+</nav>
+
+</body>
+</html>

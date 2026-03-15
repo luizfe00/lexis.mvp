@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Protótipo MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+
+body {
+  background: #0e0e0e;
+  color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px 24px;
+}
+
+.prototype-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: hsl(33 60% 50% / .12);
+  border-bottom: 1px solid hsl(33 60% 50% / .25);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: hsl(33 60% 65%);
+  letter-spacing: .04em;
+  z-index: 100;
+}
+.prototype-banner svg { flex-shrink: 0; }
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  gap: 0;
+  animation: fadeUp .5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.logo-orb {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, hsl(33 60% 50%), hsl(33 60% 36%));
+  box-shadow: 0 0 0 1px hsl(33 60% 50% / .3), 0 8px 24px hsl(33 60% 40% / .3);
+}
+
+.logo-name {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 28px;
+  letter-spacing: .12em;
+  color: #f2f2f2;
+}
+
+.logo-tagline {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: hsl(33 60% 55%);
+  margin-top: 2px;
+}
+
+h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #f8f8f8;
+  margin-bottom: 16px;
+}
+
+h1 em {
+  font-style: italic;
+  color: hsl(33 60% 60%);
+}
+
+.subtitle {
+  font-size: 15px;
+  line-height: 1.6;
+  color: hsl(0 0% 60%);
+  margin-bottom: 40px;
+  max-width: 400px;
+}
+
+.personas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.persona-card {
+  background: hsl(0 0% 13%);
+  border: 1px solid hsl(0 0% 20%);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 200ms;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+}
+
+.persona-card:hover {
+  border-color: hsl(33 60% 50% / .5);
+  background: hsl(0 0% 15%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px hsl(0 0% 0% / .3);
+}
+
+.persona-card:hover .persona-arrow { transform: translateX(4px); }
+
+.persona-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.persona-icon.adv { background: hsl(199 89% 48% / .12); color: hsl(199 89% 60%); }
+.persona-icon.ges { background: hsl(33 60% 50% / .12); color: hsl(33 60% 65%); }
+
+.persona-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: hsl(0 0% 45%);
+}
+
+.persona-name {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 18px;
+  color: #f2f2f2;
+  line-height: 1.2;
+}
+
+.persona-desc {
+  font-size: 12px;
+  color: hsl(0 0% 50%);
+  line-height: 1.5;
+}
+
+.persona-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.persona-screens {
+  font-size: 11px;
+  color: hsl(0 0% 38%);
+}
+
+.persona-arrow {
+  color: hsl(33 60% 55%);
+  transition: transform 200ms;
+}
+
+.screens-list {
+  background: hsl(0 0% 11%);
+  border: 1px solid hsl(0 0% 17%);
+  border-radius: 10px;
+  padding: 16px 20px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.screens-list-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: hsl(0 0% 40%);
+  margin-bottom: 12px;
+}
+
+.screens-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.screen-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: hsl(0 0% 65%);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 150ms;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.screen-link:hover {
+  background: hsl(0 0% 15%);
+  border-color: hsl(0 0% 22%);
+  color: #f2f2f2;
+}
+
+.screen-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.footer-note {
+  font-size: 11px;
+  color: hsl(0 0% 32%);
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<div class="prototype-banner">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 4v2.5"/><circle cx="6" cy="8.5" r=".6" fill="currentColor" stroke="none"/></svg>
+  PROTÓTIPO PARA VALIDAÇÃO — Dados fictícios · Não representa um produto finalizado
+</div>
+
+<div class="center">
+
+  <div class="logo-row">
+    <div class="logo-orb"></div>
+    <div>
+      <div class="logo-name">LEXIS</div>
+      <div class="logo-tagline">Escritório Digital</div>
+    </div>
+  </div>
+
+  <h1>Gestão jurídica<br/><em>sem perder prazos</em></h1>
+
+  <p class="subtitle">Visão unificada de processos, controle de prazos e inteligência operacional para escritórios de advocacia.</p>
+
+  <div class="personas">
+
+    <a class="persona-card" href="dashboard.html">
+      <div class="persona-icon adv">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="6" r="3.5"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+      </div>
+      <div>
+        <div class="persona-label">Entrar como</div>
+        <div class="persona-name">Advogado</div>
+      </div>
+      <div class="persona-desc">Minha carteira de processos, prazos do dia e movimentações recentes.</div>
+      <div class="persona-footer">
+        <span class="persona-screens">3 telas</span>
+        <span class="persona-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <a class="persona-card" href="dashboard-gestor.html">
+      <div class="persona-icon ges">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="6" r="2.5"/><circle cx="14" cy="6" r="2.5"/><path d="M2 17c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M14 11c2 .3 4 1.5 4 6"/></svg>
+      </div>
+      <div>
+        <div class="persona-label">Entrar como</div>
+        <div class="persona-name">Gestor</div>
+      </div>
+      <div class="persona-desc">Visão do escritório: riscos, carga da equipe e processos sem responsável.</div>
+      <div class="persona-footer">
+        <span class="persona-screens">3 telas</span>
+        <span class="persona-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="screens-list">
+    <div class="screens-list-title">Navegar diretamente por tela</div>
+    <div class="screens-grid">
+      <a class="screen-link" href="dashboard.html">
+        <span class="screen-dot" style="background:hsl(199 89% 55%);"></span>
+        Dashboard — Advogado
+      </a>
+      <a class="screen-link" href="dashboard-gestor.html">
+        <span class="screen-dot" style="background:hsl(33 60% 55%);"></span>
+        Dashboard — Gestor
+      </a>
+      <a class="screen-link" href="processo-detalhe.html">
+        <span class="screen-dot" style="background:hsl(142 71% 50%);"></span>
+        Detalhe de Processo
+      </a>
+      <a class="screen-link" href="equipe-gestao.html">
+        <span class="screen-dot" style="background:hsl(38 92% 55%);"></span>
+        Gestão de Equipe
+      </a>
+      <a class="screen-link" href="equipe-sidebar-fechado.html">
+        <span class="screen-dot" style="background:hsl(0 0% 45%);"></span>
+        Equipe — Sidebar Fechado
+      </a>
+      <a class="screen-link" href="equipe-sidebar-aberto.html">
+        <span class="screen-dot" style="background:hsl(0 0% 45%);"></span>
+        Equipe — Drawer Aberto
+      </a>
+    </div>
+  </div>
+
+  <p class="footer-note">
+    MVP · Dados fictícios para fins de validação · Mar/2026<br/>
+    Lexis — Escritório Digital · versão 0.1.0-prototype
+  </p>
+
+</div>
+
+</body>
+</html>
