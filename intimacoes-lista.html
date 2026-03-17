@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Intimações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:0 0% 97%;--fg:0 0% 9%;--card:0 0% 100%;--primary:0 0% 18%;
+  --primary-fg:0 0% 98%;--muted:0 0% 96%;--muted-fg:0 0% 45%;--accent:33 60% 50%;
+  --border:0 0% 83%;--ring:33 60% 50%;--radius:0.375rem;
+  --success:142 71% 45%;--success-bg:142 77% 97%;--success-border:142 60% 75%;--success-fg:142 71% 25%;
+  --warning:38 92% 50%;--warning-bg:48 100% 96%;--warning-border:38 80% 68%;--warning-fg:33 88% 28%;
+  --error:0 84% 60%;--error-bg:0 100% 97%;--error-border:0 84% 75%;--error-fg:0 72% 35%;
+  --info:199 89% 48%;--info-bg:204 100% 97%;--info-border:199 80% 72%;--info-fg:199 89% 26%;
+  --sb-bg:0 0% 11%;--sb-fg:0 0% 95%;--sb-muted:0 0% 40%;--sb-border:0 0% 17%;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --sh-xs:0 1px 2px 0 rgb(0 0 0/.05);
+  --sh-sm:0 1px 3px 0 rgb(0 0 0/.07),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-md:0 4px 6px -1px rgb(0 0 0/.07),0 2px 4px -2px rgb(0 0 0/.04);
+  --sh-lg:0 10px 15px -3px rgb(0 0 0/.09),0 4px 6px -4px rgb(0 0 0/.05);
+  --sh-xl:0 20px 25px -5px rgb(0 0 0/.1),0 8px 10px -6px rgb(0 0 0/.04);
+  --sh-focus:0 0 0 3px hsl(33 60% 50%/.25);
+  --drawer-w:520px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:hsl(var(--fg));background:hsl(var(--bg));display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+*{scrollbar-width:thin;scrollbar-color:hsl(var(--border)) transparent;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:4px;}
+svg{display:block;}
+:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:500;line-height:1;cursor:pointer;border:none;transition:all 150ms;white-space:nowrap;text-decoration:none;font-family:var(--font-sans);outline:none;}
+.btn:focus-visible{box-shadow:var(--sh-focus);}
+.btn-xs{height:26px;padding:0 8px;font-size:11px;border-radius:calc(var(--radius) - 1px);}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+.btn-md{height:34px;padding:0 14px;}
+.btn-icon{width:30px;height:30px;padding:0;flex-shrink:0;}
+.btn-icon-sm{width:26px;height:26px;padding:0;flex-shrink:0;border-radius:calc(var(--radius) - 1px);}
+.btn-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.btn-default:hover{background:hsl(0 0% 23%);}
+.btn-outline{background:transparent;color:hsl(var(--fg));border:1px solid hsl(var(--border));}
+.btn-outline:hover{background:hsl(var(--muted));}
+.btn-ghost{background:transparent;color:hsl(var(--muted-fg));border:none;}
+.btn-ghost:hover{background:hsl(var(--muted));color:hsl(var(--fg));}
+.btn-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+.btn-warning:hover{background:hsl(48 100% 90%);}
+.btn-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.btn-success:hover{background:hsl(142 77% 92%);}
+.btn-destructive{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));}
+.btn-destructive:hover{background:hsl(0 100% 93%);}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;line-height:1;white-space:nowrap;}
+.badge-pill{padding:3px 8px;border-radius:999px;border:1px solid;}
+.badge-tag{padding:2px 7px;border-radius:4px;border:1px solid;}
+.badge-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border-color:hsl(var(--error-border));}
+.badge-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border-color:hsl(var(--warning-border));}
+.badge-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border-color:hsl(var(--success-border));}
+.badge-info{background:hsl(var(--info-bg));color:hsl(var(--info-fg));border-color:hsl(var(--info-border));}
+.badge-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));border-color:hsl(var(--border));}
+.badge-accent{background:hsl(var(--accent)/.12);color:hsl(var(--accent));border-color:hsl(var(--accent)/.3);}
+
+/* ── Sidebar ── */
+.sidebar{width:220px;min-height:100vh;background:hsl(var(--sb-bg));display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid hsl(var(--sb-border));position:relative;overflow:hidden;}
+.sidebar::before{content:'';position:absolute;width:260px;height:260px;background:radial-gradient(circle,hsl(33 60% 50%/.14) 0%,transparent 70%);top:-60px;right:-80px;pointer-events:none;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 16px 16px;border-bottom:1px solid hsl(var(--sb-border));}
+.logo-orb{width:30px;height:30px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,hsl(var(--accent)),hsl(33 60% 36%));box-shadow:0 0 0 1px hsl(33 60% 50%/.3);}
+.logo-name{font-family:var(--font-serif);font-size:15px;letter-spacing:.1em;color:hsl(var(--sb-fg));display:block;}
+.logo-sub{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--accent));display:block;margin-top:1px;}
+.nav-sec{padding:12px 8px 4px;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--sb-muted));padding:0 8px;margin-bottom:4px;display:block;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:calc(var(--radius) - 1px);color:hsl(0 0% 58%);font-size:13px;font-weight:450;cursor:pointer;transition:background 150ms,color 150ms;text-decoration:none;}
+.nav-item:hover{background:hsl(0 0% 100%/.05);color:hsl(var(--sb-fg));}
+.nav-item.active{background:hsl(33 60% 50%/.13);color:hsl(var(--accent));}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-icon{width:15px;height:15px;flex-shrink:0;opacity:.7;}
+.nav-badge{margin-left:auto;background:hsl(var(--error));color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center;}
+.nav-badge.am{background:hsl(var(--accent));}
+.sb-sep{height:1px;background:hsl(var(--sb-border));margin:6px 8px;}
+.sb-spacer{flex:1;}
+.sb-footer{padding:10px 8px;border-top:1px solid hsl(var(--sb-border));}
+.avatar{border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;font-family:var(--font-sans);}
+.avatar-xs{width:22px;height:22px;font-size:9px;}
+.avatar-sm{width:28px;height:28px;font-size:11px;}
+.avatar-md{width:32px;height:32px;font-size:12px;}
+.av-rf{background:linear-gradient(135deg,hsl(33 70% 50%),hsl(30 55% 35%));color:#fff;}
+.av-am{background:linear-gradient(135deg,hsl(199 89% 48%),hsl(199 89% 30%));color:#fff;}
+.user-row{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--radius);cursor:pointer;}
+.user-row:hover{background:hsl(0 0% 100%/.05);}
+.user-name{font-size:12px;font-weight:500;color:hsl(var(--sb-fg));}
+.user-role{font-size:10px;color:hsl(var(--sb-muted));}
+
+/* ── Shell ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{height:48px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;z-index:10;}
+.topbar-left{flex:1;display:flex;align-items:center;gap:10px;}
+.page-title{font-family:var(--font-serif);font-size:17px;color:hsl(var(--fg));}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:hsl(var(--success-fg));background:hsl(var(--success-bg));border:1px solid hsl(var(--success-border));padding:3px 10px;border-radius:20px;}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:hsl(var(--success));animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── KPI strip ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.kpi-cell{padding:10px 18px;border-right:1px solid hsl(var(--border));display:flex;align-items:center;gap:10px;}
+.kpi-cell:last-child{border-right:none;}
+.kpi-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ki-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));}
+.ki-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));}
+.ki-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));}
+.ki-muted{background:hsl(var(--muted));color:hsl(var(--muted-fg));}
+.kpi-num{font-family:var(--font-serif);font-size:20px;line-height:1;color:hsl(var(--fg));}
+.kpi-desc{font-size:10.5px;color:hsl(var(--muted-fg));margin-top:1px;}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 20px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.search-wrap{position:relative;flex:1;max-width:300px;}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:hsl(var(--muted-fg));pointer-events:none;}
+.search-input{width:100%;height:32px;padding:0 10px 0 32px;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;transition:border-color 150ms,box-shadow 150ms;}
+.search-input::placeholder{color:hsl(var(--muted-fg));}
+.search-input:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.filter-select{height:32px;padding:0 28px 0 10px;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:12px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
+.filter-select:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.toolbar-sep{width:1px;height:20px;background:hsl(var(--border));flex-shrink:0;}
+.toolbar-right{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.result-count{font-size:12px;color:hsl(var(--muted-fg));}
+
+/* ── Content scroll area ── */
+.content{flex:1;overflow-y:auto;padding-bottom:80px;}
+
+/* ══ PROCESSO GROUP ══ */
+.proc-group{border-bottom:2px solid hsl(var(--border));margin-bottom:0;}
+.proc-group:last-child{border-bottom:none;}
+
+.proc-group-header{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;
+  background:hsl(var(--muted));
+  border-bottom:1px solid hsl(var(--border));
+  cursor:pointer;
+  position:sticky;top:0;z-index:9;
+  user-select:none;
+  transition:background 130ms;
+}
+.proc-group-header:hover{background:hsl(0 0% 93%);}
+.proc-group.collapsed .proc-group-items{display:none;}
+.proc-group.collapsed .gh-chevron{transform:rotate(-90deg);}
+.gh-chevron{width:14px;height:14px;color:hsl(var(--muted-fg));transition:transform 200ms;flex-shrink:0;margin-left:auto;}
+
+.gh-unread-dot{width:7px;height:7px;border-radius:50%;background:hsl(var(--accent));flex-shrink:0;}
+.gh-proc-name{font-size:13px;font-weight:600;color:hsl(var(--fg));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+.gh-cnj{font-family:var(--font-mono);font-size:10.5px;color:hsl(var(--muted-fg));white-space:nowrap;}
+.gh-count{font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:hsl(var(--card));border:1px solid hsl(var(--border));color:hsl(var(--muted-fg));white-space:nowrap;flex-shrink:0;}
+.gh-count.has-unread{background:hsl(var(--accent)/.1);border-color:hsl(var(--accent)/.3);color:hsl(var(--accent));}
+
+/* ══ INTIMAÇÃO CARD ══ */
+.intim-card{
+  display:flex;align-items:stretch;
+  background:hsl(var(--card));
+  border-bottom:1px solid hsl(var(--border)/.6);
+  transition:background 120ms;
+  cursor:pointer;
+  position:relative;
+  animation:fadeUp .2s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.intim-card:last-child{border-bottom:none;}
+.intim-card:hover{background:hsl(var(--muted));}
+.intim-card.is-read{opacity:.72;}
+.intim-card.is-archived{opacity:.45;pointer-events:none;}
+
+/* Unread indicator */
+.unread-bar{
+  width:3px;flex-shrink:0;
+  background:hsl(var(--accent));
+  transition:background 200ms;
+}
+.intim-card.is-read .unread-bar{background:transparent;}
+
+/* Type icon */
+.type-icon-wrap{
+  width:52px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:14px 0;
+}
+.type-icon{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.ti-citacao   {background:hsl(var(--error-bg));  color:hsl(var(--error-fg));}
+.ti-decisao   {background:hsl(var(--error-bg));  color:hsl(var(--error-fg));}
+.ti-despacho  {background:hsl(var(--info-bg));   color:hsl(var(--info-fg));}
+.ti-sentenca  {background:hsl(var(--accent)/.1); color:hsl(var(--accent));}
+.ti-distribuicao{background:hsl(var(--success-bg));color:hsl(var(--success-fg));}
+.ti-outros    {background:hsl(var(--muted));     color:hsl(var(--muted-fg));}
+
+/* Card body */
+.intim-body{flex:1;padding:12px 14px;min-width:0;display:flex;flex-direction:column;gap:5px;}
+
+.intim-top{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;}
+.intim-title{font-size:13px;font-weight:600;color:hsl(var(--fg));flex:1;min-width:0;}
+.intim-card.is-read .intim-title{font-weight:400;color:hsl(var(--muted-fg));}
+
+.intim-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap;flex-shrink:0;}
+
+.intim-teor{
+  font-size:12px;color:hsl(var(--muted-fg));
+  line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+
+/* Meta row */
+.intim-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.intim-source{
+  display:flex;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  color:hsl(var(--muted-fg));text-transform:uppercase;
+}
+.meta-sep{color:hsl(var(--border));font-size:12px;}
+.intim-date{font-size:11px;color:hsl(var(--muted-fg));}
+
+/* Prazo vinculado pill */
+.prazo-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 8px;border-radius:999px;
+  font-size:10.5px;font-weight:600;
+  border:1px solid;
+  text-decoration:none;
+  transition:opacity 150ms;
+}
+.prazo-pill:hover{opacity:.75;}
+.pp-error  {background:hsl(var(--error-bg));  color:hsl(var(--error-fg));  border-color:hsl(var(--error-border));}
+.pp-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border-color:hsl(var(--warning-border));}
+.pp-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border-color:hsl(var(--success-border));}
+.pp-muted  {background:hsl(var(--muted));     color:hsl(var(--muted-fg));  border-color:hsl(var(--border));}
+
+/* Prazo pendente de confirmação */
+.prazo-suggestion{
+  display:flex;align-items:center;gap:8px;
+  background:hsl(var(--warning-bg));
+  border:1px solid hsl(var(--warning-border));
+  border-radius:var(--radius);
+  padding:7px 10px;
+  margin-top:2px;
+}
+.ps-label{font-size:11.5px;font-weight:500;color:hsl(var(--warning-fg));flex:1;}
+.ps-date{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:hsl(var(--warning-fg));}
+
+/* Actions hover */
+.intim-actions{
+  display:flex;align-items:center;gap:3px;
+  padding:0 12px 0 0;
+  flex-shrink:0;
+  opacity:0;transition:opacity 150ms;
+  align-self:center;
+}
+.intim-card:hover .intim-actions{opacity:1;}
+
+/* Lifecycle stepper — no drawer */
+.lifecycle{
+  display:flex;align-items:center;gap:0;
+  background:hsl(var(--muted));
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid hsl(var(--border));
+}
+.lc-step{
+  flex:1;padding:8px 4px;text-align:center;
+  font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:hsl(var(--muted-fg));
+  position:relative;transition:all 150ms;
+}
+.lc-step::after{
+  content:'›';
+  position:absolute;right:-6px;top:50%;transform:translateY(-50%);
+  font-size:14px;color:hsl(var(--border));z-index:1;
+}
+.lc-step:last-child::after{display:none;}
+.lc-step.done{background:hsl(var(--success-bg));color:hsl(var(--success-fg));}
+.lc-step.active{background:hsl(var(--accent));color:#fff;}
+.lc-step.pending{background:hsl(var(--card));color:hsl(var(--muted-fg));}
+
+/* ══ DRAWER ══ */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.35);
+  z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:var(--drawer-w);
+  background:hsl(var(--card));
+  border-left:1px solid hsl(var(--border));
+  box-shadow:var(--sh-xl);
+  z-index:201;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.drawer.open{transform:translateX(0);}
+
+.drawer-header{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:16px 18px;
+  border-bottom:1px solid hsl(var(--border));
+  flex-shrink:0;
+}
+.drawer-type-icon{
+  width:38px;height:38px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.drawer-header-text{flex:1;min-width:0;}
+.drawer-title{font-size:14.5px;font-weight:600;color:hsl(var(--fg));line-height:1.3;margin-bottom:4px;}
+.drawer-sub{font-size:11.5px;color:hsl(var(--muted-fg));}
+
+.drawer-body{flex:1;overflow-y:auto;padding:18px;}
+.drawer-section{margin-bottom:20px;}
+.drawer-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:10px;}
+
+/* Teor do documento */
+.teor-box{
+  background:hsl(var(--bg));
+  border:1px solid hsl(var(--border));
+  border-radius:var(--radius);
+  padding:14px 16px;
+  font-size:13px;line-height:1.7;
+  color:hsl(var(--fg));
+  font-family:var(--font-mono);
+  max-height:200px;overflow-y:auto;
+  white-space:pre-wrap;
+}
+
+/* Meta grid no drawer */
+.drawer-meta-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px 20px;
+}
+.dm-field{}
+.dm-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:3px;}
+.dm-value{font-size:13px;color:hsl(var(--fg));font-weight:500;}
+.dm-value.mono{font-family:var(--font-mono);font-size:12px;}
+
+/* Prazo suggestion no drawer */
+.drawer-prazo-suggestion{
+  background:hsl(var(--warning-bg));
+  border:1px solid hsl(var(--warning-border));
+  border-radius:var(--radius);
+  padding:14px 16px;
+}
+.dps-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.dps-title{font-size:13px;font-weight:600;color:hsl(var(--warning-fg));}
+.dps-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.dps-input{width:100%;height:32px;padding:0 10px;border:1px solid hsl(var(--warning-border));border-radius:var(--radius);font-size:12.5px;font-family:var(--font-sans);background:hsl(var(--card));color:hsl(var(--fg));outline:none;}
+.dps-input:focus{border-color:hsl(var(--warning));box-shadow:var(--sh-focus);}
+.dps-input-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--warning-fg));margin-bottom:4px;}
+
+/* Prazo vinculado (já confirmado) no drawer */
+.drawer-prazo-linked{
+  display:flex;align-items:center;gap:10px;
+  background:hsl(var(--success-bg));
+  border:1px solid hsl(var(--success-border));
+  border-radius:var(--radius);
+  padding:12px 14px;
+}
+.dpl-icon{width:32px;height:32px;border-radius:7px;background:hsl(var(--success-bg));border:1px solid hsl(var(--success-border));display:flex;align-items:center;justify-content:center;color:hsl(var(--success-fg));flex-shrink:0;}
+.dpl-text{flex:1;}
+.dpl-title{font-size:13px;font-weight:600;color:hsl(var(--success-fg));margin-bottom:1px;}
+.dpl-meta{font-size:11px;color:hsl(var(--success-fg));opacity:.75;}
+
+/* Anotação textarea no drawer */
+.nota-textarea{width:100%;padding:10px 12px;min-height:72px;resize:vertical;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;line-height:1.5;}
+.nota-textarea:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+
+/* Encaminhar options */
+.forward-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid hsl(var(--border));border-radius:var(--radius);cursor:pointer;transition:all 130ms;background:transparent;text-align:left;font-family:var(--font-sans);width:100%;margin-bottom:6px;}
+.forward-option:last-child{margin-bottom:0;}
+.forward-option:hover{background:hsl(var(--muted));}
+.forward-option.selected{border-color:hsl(var(--accent)/.4);background:hsl(var(--accent)/.07);}
+.fo-name{font-size:13px;font-weight:500;color:hsl(var(--fg));}
+.fo-role{font-size:11px;color:hsl(var(--muted-fg));}
+
+/* Drawer footer */
+.drawer-footer{
+  padding:12px 18px;
+  border-top:1px solid hsl(var(--border));
+  display:flex;align-items:center;gap:8px;
+  flex-shrink:0;
+  background:hsl(var(--card));
+}
+.drawer-footer-left{flex:1;display:flex;gap:6px;}
+
+/* Toast */
+.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:hsl(var(--fg));color:hsl(var(--primary-fg));padding:10px 18px;border-radius:999px;font-size:12.5px;font-weight:500;box-shadow:var(--sh-lg);animation:toastIn .2s ease;z-index:2000;display:flex;align-items:center;gap:7px;}
+.toast.hidden{display:none;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* Modal vincular processo */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:300;animation:mfadeIn .15s ease;}
+.modal-overlay.hidden{display:none;}
+@keyframes mfadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:hsl(var(--card));border-radius:10px;box-shadow:var(--sh-xl);width:100%;max-width:440px;margin:0 16px;overflow:hidden;animation:mslideUp .18s ease;}
+@keyframes mslideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid hsl(var(--border));}
+.modal-title{font-size:14px;font-weight:600;color:hsl(var(--fg));}
+.modal-body{padding:20px;}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid hsl(var(--border));}
+.form-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:6px;display:block;}
+.form-input{width:100%;height:34px;padding:0 10px;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;transition:border-color 150ms;}
+.form-input:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.form-group{margin-bottom:14px;}
+.form-group:last-child{margin-bottom:0;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-orb"></div>
+    <div><span class="logo-name">LEXIS</span><span class="logo-sub">Escritório Digital</span></div>
+  </div>
+  <nav class="nav-sec">
+    <span class="nav-label">Principal</span>
+    <a class="nav-item" href="dashboard.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6L7.5 1.5 13.5 6V13A.5.5 0 0113 13.5H9.5V10H5.5V13.5H2A.5.5 0 011.5 13V6Z"/></svg>
+      Início
+    </a>
+    <a class="nav-item" href="processos-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="12" height="12" rx="1.5"/><path d="M4.5 7.5h6M4.5 5h3M4.5 10h4.5"/></svg>
+      Processos
+      <span class="nav-badge am">47</span>
+    </a>
+    <a class="nav-item" href="prazos-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4.5V8l2 2"/></svg>
+      Prazos
+      <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item active" href="intimacoes-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2H13.5l-1-2z"/><path d="M5.5 13.5h4"/></svg>
+      Intimações
+      <span class="nav-badge">8</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="12" height="11" rx="1.5"/><path d="M4.5 1.5v2M10.5 1.5v2M1.5 6.5h12"/></svg>
+      Agenda
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h10M2.5 7.5H9M2.5 11h5"/></svg>
+      Tarefas
+      <span class="nav-badge am">5</span>
+    </a>
+  </nav>
+  <div class="sb-sep"></div>
+  <nav class="nav-sec">
+    <span class="nav-label">Sistema</span>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.5"/><path d="M7.5 1v2M7.5 12v2M1 7.5h2M12 7.5h2"/></svg>
+      Configurações
+    </a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-footer">
+    <div class="user-row">
+      <div class="avatar avatar-sm av-rf">RF</div>
+      <div>
+        <p class="user-name">Dr. Rafael Fontes</p>
+        <p class="user-role">Advogado · OAB/SP 123.456</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <p class="page-title">Intimações</p>
+      <span class="badge badge-tag badge-secondary" style="font-size:11px;">Minha carteira</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="sync-pill"><span class="sync-dot"></span>DJE-SP · há 8 min</div>
+      <button class="btn btn-ghost btn-icon" style="position:relative;" aria-label="Notificações">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5a5 5 0 00-5 5v2.5l-1 1.5h12l-1-1.5V6.5a5 5 0 00-5-5z"/><path d="M6 12.5a1.5 1.5 0 003 0"/></svg>
+        <span style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:hsl(var(--error));border:1.5px solid hsl(var(--card));"></span>
+      </button>
+      <div class="avatar avatar-md av-rf" style="cursor:pointer;">RF</div>
+    </div>
+  </header>
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-error">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5V7.5"/><circle cx="7" cy="9.5" r=".6" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num" style="color:hsl(var(--error-fg));">8</div>
+        <div class="kpi-desc">Não lidas</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-warning">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5V8l1.5 1.5"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num" style="color:hsl(var(--warning-fg));">3</div>
+        <div class="kpi-desc">Aguardando prazo</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-success">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3.5-4"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num">14</div>
+        <div class="kpi-desc">Processadas este mês</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-muted">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2h12l-1-2z"/><path d="M5.5 13.5h3"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num">23</div>
+        <div class="kpi-desc">Total no mês</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M10 10l2.5 2.5"/></svg>
+      <input class="search-input" type="text" placeholder="Buscar por processo, tipo ou teor…" id="searchInput" oninput="applyFilters()"/>
+    </div>
+    <div class="toolbar-sep"></div>
+    <select class="filter-select" id="filterTipo" onchange="applyFilters()">
+      <option value="">Tipo: todos</option>
+      <option value="citacao">Citação</option>
+      <option value="decisao">Decisão</option>
+      <option value="despacho">Despacho</option>
+      <option value="sentenca">Sentença</option>
+      <option value="outros">Outros</option>
+    </select>
+    <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+      <option value="">Status: todos</option>
+      <option value="nao-lida">Não lidas</option>
+      <option value="aguardando-prazo">Aguardando prazo</option>
+      <option value="processada">Processadas</option>
+    </select>
+    <select class="filter-select" id="filterOrigem" onchange="applyFilters()">
+      <option value="">Origem: todas</option>
+      <option value="automatico">Automático</option>
+      <option value="manual">Upload manual</option>
+    </select>
+    <div class="toolbar-sep"></div>
+    <div class="toolbar-right">
+      <span class="result-count" id="resultCount">23 intimações</span>
+      <button class="btn btn-outline btn-sm" onclick="showModal('modalVincular')">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 5l-4 4a2 2 0 002.8 2.8l4-4a2 2 0 00-2.8-2.8z"/><path d="M5 7l4-4a2 2 0 012.8 2.8l-1 1"/></svg>
+        Vincular intimação
+      </button>
+      <button class="btn btn-default btn-sm">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M6 1v10M1 6h10"/></svg>
+        Upload manual
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista agrupada por processo -->
+  <div class="content" id="contentArea">
+
+    <!-- ══ GRUPO 1 — Silva & Construções (tem não lidas + prazo pendente) ══ -->
+    <div class="proc-group" id="pg1">
+      <div class="proc-group-header" onclick="toggleGroup('pg1')">
+        <div class="gh-unread-dot"></div>
+        <span class="gh-proc-name">Silva &amp; Construções Ltda. × Banco Nacional</span>
+        <span class="gh-cnj">0001234-56.2024.8.26.0100</span>
+        <span class="gh-count has-unread">2 não lidas</span>
+        <svg class="gh-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5L7 9.5 11.5 5"/></svg>
+      </div>
+      <div class="proc-group-items">
+
+        <!-- Intimação 1 — Citação, não lida, prazo sugerido aguardando confirmação -->
+        <div class="intim-card" data-tipo="citacao" data-status="aguardando-prazo" data-origem="automatico" onclick="openDrawer('d-citacao')">
+          <div class="unread-bar"></div>
+          <div class="type-icon-wrap">
+            <div class="type-icon ti-citacao">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5L1.5 13.5h13L8 1.5z"/><path d="M8 6.5v3"/><circle cx="8" cy="11.5" r=".7" fill="currentColor" stroke="none"/></svg>
+            </div>
+          </div>
+          <div class="intim-body">
+            <div class="intim-top">
+              <span class="intim-title">Citação — Prazo legal para contestação</span>
+              <div class="intim-badges">
+                <span class="badge badge-tag badge-error">Citação</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="4" r="3"/><path d="M4 2v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="intim-teor">Vistos. Cite-se a parte ré, na pessoa de seus advogados, para que, querendo, ofereça contestação no prazo legal de quinze dias, sob pena de revelia. Int. Pub. e Cump.</div>
+            <div class="intim-meta">
+              <span class="intim-source">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2.5"/></svg>
+                DJE-SP
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="intim-date">Publicado em 15/02/2026</span>
+              <span class="meta-sep">·</span>
+              <span class="intim-date">TJSP · 3ª Vara Cível</span>
+            </div>
+            <!-- Prazo sugerido aguardando confirmação -->
+            <div class="prazo-suggestion" onclick="event.stopPropagation();openDrawer('d-citacao')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:hsl(var(--warning-fg));flex-shrink:0;"><circle cx="7" cy="7" r="5.5"/><path d="M7 4V7.5l1.5 1.5"/></svg>
+              <span class="ps-label">Prazo sugerido pelo sistema: contestação em</span>
+              <span class="ps-date">01/03/2026</span>
+              <button class="btn btn-warning btn-xs" style="font-size:10.5px;">Confirmar prazo</button>
+            </div>
+          </div>
+          <div class="intim-actions">
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();markRead(this)" title="Marcar como lida">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 6.5l3.5 3.5 6.5-6.5"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();archiveCard(this)" title="Arquivar">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="10" height="7.5" rx="1"/><path d="M1.5 4l1.5-2.5h7L11.5 4"/><path d="M5 7.5h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Intimação 2 — Despacho, não lida, sem prazo -->
+        <div class="intim-card" data-tipo="despacho" data-status="nao-lida" data-origem="automatico" onclick="openDrawer('d-despacho1')">
+          <div class="unread-bar"></div>
+          <div class="type-icon-wrap">
+            <div class="type-icon ti-despacho">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 5.5h4M5 10.5h3"/></svg>
+            </div>
+          </div>
+          <div class="intim-body">
+            <div class="intim-top">
+              <span class="intim-title">Despacho — Juntada de documentos deferida</span>
+              <div class="intim-badges">
+                <span class="badge badge-tag badge-info">Despacho</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="4" r="3"/><path d="M4 2v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="intim-teor">Vistos. Defiro a juntada dos documentos de fls. 45/67. Dê-se ciência às partes. Nada mais. Int.</div>
+            <div class="intim-meta">
+              <span class="intim-source">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2.5"/></svg>
+                DJE-SP
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="intim-date">Publicado em 20/02/2026</span>
+              <span class="meta-sep">·</span>
+              <span class="badge badge-tag badge-secondary" style="font-size:10px;">Mera ciência</span>
+            </div>
+          </div>
+          <div class="intim-actions">
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();markRead(this)" title="Marcar como lida">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 6.5l3.5 3.5 6.5-6.5"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();archiveCard(this)" title="Arquivar">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="10" height="7.5" rx="1"/><path d="M1.5 4l1.5-2.5h7L11.5 4"/><path d="M5 7.5h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ GRUPO 2 — João Pereira (1 não lida) ══ -->
+    <div class="proc-group" id="pg2">
+      <div class="proc-group-header" onclick="toggleGroup('pg2')">
+        <div class="gh-unread-dot"></div>
+        <span class="gh-proc-name">João Pereira × Telecom Express S/A</span>
+        <span class="gh-cnj">0009876-11.2023.8.26.0100</span>
+        <span class="gh-count has-unread">1 não lida</span>
+        <svg class="gh-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5L7 9.5 11.5 5"/></svg>
+      </div>
+      <div class="proc-group-items">
+
+        <!-- Decisão não lida com prazo criado -->
+        <div class="intim-card" data-tipo="decisao" data-status="nao-lida" data-origem="automatico" onclick="openDrawer('d-decisao')">
+          <div class="unread-bar"></div>
+          <div class="type-icon-wrap">
+            <div class="type-icon ti-decisao">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M5.5 8.5L7.5 10.5 11 6"/></svg>
+            </div>
+          </div>
+          <div class="intim-body">
+            <div class="intim-top">
+              <span class="intim-title">Decisão — Vista às partes para razões de recurso</span>
+              <div class="intim-badges">
+                <span class="badge badge-tag badge-error">Decisão</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="4" r="3"/><path d="M4 2v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="intim-teor">Trata-se de recurso ordinário interposto pela parte autora. Concedo vista às partes para apresentação de contrarrazões no prazo de 8 (oito) dias corridos.</div>
+            <div class="intim-meta">
+              <span class="intim-source">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2.5"/></svg>
+                DEJT
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="intim-date">Publicado em 21/02/2026</span>
+              <span class="meta-sep">·</span>
+              <a class="prazo-pill pp-error" href="prazos-lista.html" onclick="event.stopPropagation();">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                Prazo: hoje
+              </a>
+            </div>
+          </div>
+          <div class="intim-actions">
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();markRead(this)" title="Marcar como lida">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 6.5l3.5 3.5 6.5-6.5"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();archiveCard(this)" title="Arquivar">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="10" height="7.5" rx="1"/><path d="M1.5 4l1.5-2.5h7L11.5 4"/><path d="M5 7.5h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ GRUPO 3 — Construtora Nova Era (lidas, já processadas) ══ -->
+    <div class="proc-group" id="pg3">
+      <div class="proc-group-header" onclick="toggleGroup('pg3')">
+        <span class="gh-proc-name" style="padding-left:15px;">Construtora Nova Era × Município de São Paulo</span>
+        <span class="gh-cnj">0001199-77.2022.8.26.0100</span>
+        <span class="gh-count">2 processadas</span>
+        <svg class="gh-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5L7 9.5 11.5 5"/></svg>
+      </div>
+      <div class="proc-group-items">
+
+        <!-- Sentença lida, prazo confirmado -->
+        <div class="intim-card is-read" data-tipo="sentenca" data-status="processada" data-origem="automatico" onclick="openDrawer('d-sentenca')">
+          <div class="unread-bar"></div>
+          <div class="type-icon-wrap">
+            <div class="type-icon ti-sentenca">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg>
+            </div>
+          </div>
+          <div class="intim-body">
+            <div class="intim-top">
+              <span class="intim-title">Sentença — Procedente em parte</span>
+              <div class="intim-badges">
+                <span class="badge badge-tag badge-accent">Sentença</span>
+                <span class="badge badge-tag badge-success" style="font-size:10px;gap:3px;">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 4l2 2 3-3.5"/></svg>
+                  Processada
+                </span>
+              </div>
+            </div>
+            <div class="intim-teor">Diante do exposto, julgo procedente em parte o pedido para condenar o réu ao pagamento de R$ 2.340.000,00 a título de indenização por danos materiais...</div>
+            <div class="intim-meta">
+              <span class="intim-source">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2.5"/></svg>
+                DJE-SP
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="intim-date">Publicado em 28/01/2026</span>
+              <span class="meta-sep">·</span>
+              <a class="prazo-pill pp-success" href="prazos-lista.html" onclick="event.stopPropagation();">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M2.5 4.5l1.5 1.5 2.5-2.5"/></svg>
+                Prazo: 18/03 (17 dias)
+              </a>
+            </div>
+          </div>
+          <div class="intim-actions">
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();archiveCard(this)" title="Arquivar">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="10" height="7.5" rx="1"/><path d="M1.5 4l1.5-2.5h7L11.5 4"/><path d="M5 7.5h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload manual, lida, sem prazo (mera ciência) -->
+        <div class="intim-card is-read" data-tipo="outros" data-status="processada" data-origem="manual" onclick="openDrawer('d-manual')">
+          <div class="unread-bar"></div>
+          <div class="type-icon-wrap">
+            <div class="type-icon ti-outros">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 12V6l4-4h4v10H4z"/><path d="M8 2v4h4"/></svg>
+            </div>
+          </div>
+          <div class="intim-body">
+            <div class="intim-top">
+              <span class="intim-title">Publicação — Designação de perito</span>
+              <div class="intim-badges">
+                <span class="badge badge-tag badge-secondary">Outros</span>
+                <span class="badge badge-tag badge-accent" style="font-size:10px;gap:3px;">
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 1v5M2 4l2 2 2-2"/><rect x="1" y="6.5" width="6" height="1.5" rx=".5"/></svg>
+                  Upload manual
+                </span>
+              </div>
+            </div>
+            <div class="intim-teor">Fica designado o Sr. Eng. Carlos Mendes, CREA 45.678/SP, para atuar como perito nomeado pelo Juízo. Fixo os honorários provisórios em R$ 8.000,00.</div>
+            <div class="intim-meta">
+              <span class="intim-source">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 1v5M3 4l2 2 2-2"/><rect x="1" y="7" width="8" height="2" rx=".5"/></svg>
+                Upload em 10/01/2026
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="badge badge-tag badge-secondary" style="font-size:10px;">Mera ciência · Arquivada</span>
+            </div>
+          </div>
+          <div class="intim-actions">
+            <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();" title="Já arquivada" style="opacity:.4;cursor:default;">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="10" height="7.5" rx="1"/><path d="M1.5 4l1.5-2.5h7L11.5 4"/><path d="M5 7.5h3"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ══════════════════════════════════════
+     DRAWER — Leitura completa de intimação
+════════════════════════════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+<aside class="drawer" id="mainDrawer" role="dialog" aria-modal="true" aria-label="Detalhes da intimação">
+
+  <!-- Drawer header -->
+  <div class="drawer-header">
+    <div class="drawer-type-icon ti-citacao" id="drawerTypeIcon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 1.5L1.5 16.5h15L9 1.5z"/><path d="M9 7v4"/><circle cx="9" cy="13.5" r=".9" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <div class="drawer-header-text">
+      <div class="drawer-title" id="drawerTitle">Citação — Prazo legal para contestação</div>
+      <div class="drawer-sub" id="drawerSub">Silva &amp; Construções Ltda. × Banco Nacional · 0001234-56.2024.8.26.0100</div>
+    </div>
+    <button class="btn btn-ghost btn-icon" onclick="closeDrawer()" aria-label="Fechar">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l11 11M13 2L2 13"/></svg>
+    </button>
+  </div>
+
+  <!-- Lifecycle stepper -->
+  <div style="padding:12px 18px;border-bottom:1px solid hsl(var(--border));flex-shrink:0;">
+    <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-bottom:6px;">Ciclo de vida</div>
+    <div class="lifecycle" id="drawerLifecycle">
+      <div class="lc-step done">Recebida</div>
+      <div class="lc-step done">Lida</div>
+      <div class="lc-step active">Prazo criado</div>
+      <div class="lc-step pending">Arquivada</div>
+    </div>
+  </div>
+
+  <!-- Drawer body -->
+  <div class="drawer-body">
+
+    <!-- Teor do documento -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Teor da publicação</div>
+      <div class="teor-box" id="drawerTeor">Vistos.
+
+Cite-se a parte ré, na pessoa de seus advogados constituídos nos autos, para que, querendo, ofereça contestação no prazo legal de QUINZE DIAS, contados a partir da data da publicação desta no Diário da Justiça Eletrônico.
+
+Em caso de revelia, os fatos afirmados pelo autor serão presumidos como verdadeiros.
+
+Intime-se. Publique-se. Cumpra-se.</div>
+    </div>
+
+    <!-- Metadados -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Informações da publicação</div>
+      <div class="drawer-meta-grid" id="drawerMeta">
+        <div class="dm-field"><div class="dm-label">Tipo</div><div class="dm-value">Citação</div></div>
+        <div class="dm-field"><div class="dm-label">Fonte / Diário</div><div class="dm-value">DJE-SP</div></div>
+        <div class="dm-field"><div class="dm-label">Data de publicação</div><div class="dm-value">15/02/2026</div></div>
+        <div class="dm-field"><div class="dm-label">Tribunal</div><div class="dm-value">TJSP · 3ª Vara Cível</div></div>
+        <div class="dm-field"><div class="dm-label">CNJ do processo</div><div class="dm-value mono">0001234-56.2024.8.26.0100</div></div>
+        <div class="dm-field"><div class="dm-label">Origem</div><div class="dm-value">Automático</div></div>
+      </div>
+    </div>
+
+    <!-- Prazo sugerido (aguardando confirmação) -->
+    <div class="drawer-section" id="drawerPrazoSection">
+      <div class="drawer-section-title">Prazo detectado pelo sistema</div>
+      <div class="drawer-prazo-suggestion">
+        <div class="dps-header">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:hsl(var(--warning));flex-shrink:0;"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4V8l2 2"/></svg>
+          <span class="dps-title">Prazo de 15 dias corridos detectado automaticamente</span>
+        </div>
+        <div class="dps-fields">
+          <div>
+            <div class="dps-input-label">Tipo de prazo</div>
+            <input class="dps-input" type="text" value="Contestação"/>
+          </div>
+          <div>
+            <div class="dps-input-label">Data de vencimento</div>
+            <input class="dps-input" type="date" value="2026-03-01"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-warning btn-sm" style="flex:1;" onclick="confirmPrazo()">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 6l2.5 2.5 5.5-5.5"/></svg>
+            Confirmar e criar prazo
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="dismissPrazo()">Dispensar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anotação -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Anotação</div>
+      <textarea class="nota-textarea" id="drawerNota" placeholder="Adicione observações, pendências ou instruções para esta intimação…"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+        <button class="btn btn-outline btn-xs" onclick="saveNota()">Salvar anotação</button>
+      </div>
+    </div>
+
+    <!-- Encaminhar -->
+    <div class="drawer-section">
+      <div class="drawer-section-title">Encaminhar para</div>
+      <button class="forward-option" onclick="selectForward(this)">
+        <div class="avatar avatar-sm av-rf">RF</div>
+        <div><div class="fo-name">Dr. Rafael Fontes (você)</div><div class="fo-role">Advogado · Carga 62%</div></div>
+        <span class="badge badge-tag badge-success" style="margin-left:auto;font-size:10px;">Atual</span>
+      </button>
+      <button class="forward-option" onclick="selectForward(this)">
+        <div class="avatar avatar-sm av-am">AM</div>
+        <div><div class="fo-name">Dra. Adriana Melo</div><div class="fo-role">Advogada · Carga 48%</div></div>
+        <span class="badge badge-tag badge-secondary" style="margin-left:auto;font-size:10px;">Disponível</span>
+      </button>
+    </div>
+
+  </div><!-- /drawer-body -->
+
+  <!-- Drawer footer -->
+  <div class="drawer-footer">
+    <div class="drawer-footer-left">
+      <button class="btn btn-success btn-sm" onclick="markReadFromDrawer()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M1.5 6l3 3 6-6"/></svg>
+        Marcar como lida
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="archiveFromDrawer()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="4" width="9" height="7" rx="1"/><path d="M1.5 4l1.5-2.5h6L10.5 4"/><path d="M4.5 7.5h3"/></svg>
+        Arquivar
+      </button>
+      <a href="processo-detalhe.html" class="btn btn-ghost btn-sm">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2.5"/></svg>
+        Ver processo
+      </a>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="closeDrawer()">Fechar</button>
+  </div>
+
+</aside>
+
+<!-- ══ MODAL: VINCULAR A PROCESSO ══ -->
+<div class="modal-overlay hidden" id="modalVincular" onclick="closeModalOnOverlay(event,'modalVincular')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <span class="modal-title">Vincular intimação a processo</span>
+      <button class="btn btn-ghost btn-icon-sm" onclick="closeModal('modalVincular')">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l9 9M11 2L2 11"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Número CNJ ou nome das partes</label>
+        <input class="form-input" type="text" placeholder="Ex: 0001234-56.2024.8.26.0100 ou Silva & Construções"/>
+      </div>
+      <div style="font-size:12px;color:hsl(var(--muted-fg));padding:8px 10px;background:hsl(var(--muted));border-radius:var(--radius);">
+        Use para intimações recebidas via upload manual ou não vinculadas automaticamente pelo sistema de coleta.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modalVincular')">Cancelar</button>
+      <button class="btn btn-default btn-sm" onclick="closeModal('modalVincular');showToast('Intimação vinculada ao processo')">Vincular</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast">
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 6.5l3 3 6-6"/></svg>
+  <span id="toastMsg">Ação realizada</span>
+</div>
+
+<!-- Proto nav -->
+<style>
+.proto-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:hsl(0 0% 9%);border:1px solid hsl(0 0% 20%);border-radius:40px;padding:6px 8px;display:flex;align-items:center;gap:4px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;font-family:"Inter",-apple-system,sans-serif;}
+.proto-nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(0 0% 35%);padding:0 8px 0 4px;border-right:1px solid hsl(0 0% 18%);margin-right:4px;white-space:nowrap;}
+.proto-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;text-decoration:none;font-size:11px;font-weight:500;color:hsl(0 0% 60%);transition:all 150ms;white-space:nowrap;border:1px solid transparent;}
+.proto-btn:hover{background:hsl(0 0% 16%);color:#f2f2f2;border-color:hsl(0 0% 22%);}
+.proto-btn.proto-active{background:hsl(33 60% 50%/.15);color:hsl(33 60% 65%);border-color:hsl(33 60% 50%/.3);}
+.proto-sep{width:1px;height:16px;background:hsl(0 0% 18%);margin:0 2px;flex-shrink:0;}
+</style>
+<nav class="proto-nav">
+  <span class="proto-nav-label">Lexis MVP</span>
+  <a class="proto-btn" href="index.html"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5L5.5 1.5 10 5.5V10H7V7.5H4V10H1V5.5Z"/></svg>Início</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="dashboard.html">Dashboard Adv.</a>
+  <a class="proto-btn" href="dashboard-gestor.html">Dashboard Gestor</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="processos-lista.html">Processos</a>
+  <a class="proto-btn" href="processo-detalhe.html">Detalhe</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="prazos-lista.html">Prazos</a>
+  <a class="proto-btn proto-active" href="intimacoes-lista.html">Intimações</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="equipe-gestao.html">Equipe</a>
+</nav>
+
+<script>
+// ── Grupos colapsáveis ──
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+// ── Drawer ──
+const drawerData = {
+  'd-citacao': {
+    title: 'Citação — Prazo legal para contestação',
+    sub: 'Silva & Construções Ltda. × Banco Nacional · 0001234-56.2024.8.26.0100',
+    typeClass: 'ti-citacao',
+    teor: `Vistos.\n\nCite-se a parte ré, na pessoa de seus advogados constituídos nos autos, para que, querendo, ofereça contestação no prazo legal de QUINZE DIAS, contados a partir da data da publicação desta no Diário da Justiça Eletrônico.\n\nEm caso de revelia, os fatos afirmados pelo autor serão presumidos como verdadeiros.\n\nIntime-se. Publique-se. Cumpra-se.`,
+    lifecycle: [true, true, false, false],
+    activeStep: 2,
+    showPrazo: true,
+  },
+  'd-despacho1': {
+    title: 'Despacho — Juntada de documentos deferida',
+    sub: 'Silva & Construções Ltda. × Banco Nacional · 0001234-56.2024.8.26.0100',
+    typeClass: 'ti-despacho',
+    teor: `Vistos.\n\nDefiro a juntada dos documentos de fls. 45/67 apresentados pela parte autora.\n\nDê-se ciência às partes.\n\nNada mais. Int.`,
+    lifecycle: [true, false, false, false],
+    activeStep: 1,
+    showPrazo: false,
+  },
+  'd-decisao': {
+    title: 'Decisão — Vista às partes para razões de recurso',
+    sub: 'João Pereira × Telecom Express S/A · 0009876-11.2023.8.26.0100',
+    typeClass: 'ti-decisao',
+    teor: `Trata-se de recurso ordinário interposto pela parte autora em face da sentença de fls. 234/245.\n\nConcedo vista às partes para apresentação de contrarrazões no prazo de 8 (oito) dias corridos, nos termos do art. 900 da CLT.\n\nApós, remetam-se os autos ao Tribunal Regional do Trabalho.\n\nInt.`,
+    lifecycle: [true, true, true, false],
+    activeStep: 2,
+    showPrazo: false,
+  },
+  'd-sentenca': {
+    title: 'Sentença — Procedente em parte',
+    sub: 'Construtora Nova Era × Município de São Paulo · 0001199-77.2022.8.26.0100',
+    typeClass: 'ti-sentenca',
+    teor: `Diante do exposto, JULGO PROCEDENTE EM PARTE o pedido formulado na inicial para:\n\n(i) Condenar o réu ao pagamento de R$ 2.340.000,00 a título de danos materiais;\n(ii) Condenar o réu ao pagamento das custas processuais e honorários advocatícios fixados em 15% sobre o valor da condenação.\n\nTransitada em julgado, arquivem-se os autos.`,
+    lifecycle: [true, true, true, false],
+    activeStep: 2,
+    showPrazo: false,
+  },
+  'd-manual': {
+    title: 'Publicação — Designação de perito',
+    sub: 'Construtora Nova Era × Município de São Paulo · 0001199-77.2022.8.26.0100',
+    typeClass: 'ti-outros',
+    teor: `Fica designado o Sr. Eng. Carlos Mendes, CREA 45.678/SP, para atuar como perito nomeado pelo Juízo nos presentes autos.\n\nFixo os honorários provisórios em R$ 8.000,00 (oito mil reais), a serem depositados em conta judicial no prazo de 10 dias pela parte requerente.\n\nIntime-se o perito para aceitar o encargo no prazo de 5 dias.`,
+    lifecycle: [true, true, false, true],
+    activeStep: 3,
+    showPrazo: false,
+  },
+};
+
+function openDrawer(id) {
+  const data = drawerData[id] || drawerData['d-citacao'];
+
+  // Populate header
+  document.getElementById('drawerTitle').textContent = data.title;
+  document.getElementById('drawerSub').textContent = data.sub;
+
+  // Type icon
+  const iconEl = document.getElementById('drawerTypeIcon');
+  iconEl.className = 'drawer-type-icon ' + data.typeClass;
+
+  // Teor
+  document.getElementById('drawerTeor').textContent = data.teor;
+
+  // Lifecycle
+  const steps = document.querySelectorAll('.lc-step');
+  steps.forEach((s, i) => {
+    s.className = 'lc-step';
+    if (i < data.activeStep) s.classList.add('done');
+    else if (i === data.activeStep) s.classList.add('active');
+    else s.classList.add('pending');
+  });
+
+  // Prazo section
+  document.getElementById('drawerPrazoSection').style.display = data.showPrazo ? '' : 'none';
+
+  // Open
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('mainDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('mainDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Drawer actions ──
+function confirmPrazo() {
+  document.getElementById('drawerPrazoSection').innerHTML = `
+    <div class="drawer-section-title">Prazo vinculado</div>
+    <div class="drawer-prazo-linked">
+      <div class="dpl-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 8l4 4 8-8"/></svg></div>
+      <div class="dpl-text">
+        <div class="dpl-title">Contestação · 01/03/2026</div>
+        <div class="dpl-meta">Prazo criado e confirmado · TJSP · 3ª Vara Cível</div>
+      </div>
+      <a href="prazos-lista.html" class="btn btn-success btn-xs" style="font-size:10.5px;">Ver prazo</a>
+    </div>`;
+  // Update lifecycle to step 3 done
+  const steps = document.querySelectorAll('.lc-step');
+  steps[0].className = 'lc-step done';
+  steps[1].className = 'lc-step done';
+  steps[2].className = 'lc-step done';
+  steps[3].className = 'lc-step active';
+  showToast('Prazo criado: Contestação · 01/03/2026');
+}
+
+function dismissPrazo() {
+  document.getElementById('drawerPrazoSection').style.display = 'none';
+  showToast('Prazo dispensado — intimação de mera ciência');
+}
+
+function markReadFromDrawer() {
+  closeDrawer();
+  showToast('Intimação marcada como lida');
+}
+
+function archiveFromDrawer() {
+  closeDrawer();
+  showToast('Intimação arquivada');
+}
+
+function saveNota() {
+  const val = document.getElementById('drawerNota').value.trim();
+  if (val) showToast('Anotação salva');
+}
+
+function selectForward(btn) {
+  document.querySelectorAll('.forward-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const name = btn.querySelector('.fo-name').textContent;
+  showToast(`Encaminhada para ${name}`);
+}
+
+// ── Inline actions ──
+function markRead(btn) {
+  const card = btn.closest('.intim-card');
+  card.classList.add('is-read');
+  card.querySelector('.unread-bar').style.background = 'transparent';
+  showToast('Marcada como lida');
+  applyFilters();
+}
+
+function archiveCard(btn) {
+  const card = btn.closest('.intim-card');
+  card.style.animation = 'fadeOut .25s ease forwards';
+  setTimeout(() => { card.style.display = 'none'; applyFilters(); }, 250);
+  showToast('Intimação arquivada');
+}
+
+// ── Filters ──
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const tipo = document.getElementById('filterTipo').value;
+  const status = document.getElementById('filterStatus').value;
+  const origem = document.getElementById('filterOrigem').value;
+  const cards = document.querySelectorAll('.intim-card');
+  let total = 0;
+  cards.forEach(c => {
+    if (c.style.display === 'none') return;
+    const text = c.textContent.toLowerCase();
+    const ms = !search || text.includes(search);
+    const mt = !tipo || c.dataset.tipo === tipo;
+    const ms2 = !status || c.dataset.status === status;
+    const mo = !origem || c.dataset.origem === origem;
+    if (ms && mt && ms2 && mo) { c.style.display = ''; total++; }
+    else c.style.display = 'none';
+  });
+  document.getElementById('resultCount').textContent = `${total} intimaç${total===1?'ão':'ões'}`;
+}
+
+// ── Modals ──
+function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function closeModalOnOverlay(e, id) { if(e.target === document.getElementById(id)) closeModal(id); }
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+}
+
+// ── ESC ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeDrawer();
+    ['modalVincular'].forEach(closeModal);
+  }
+});
+
+// fadeOut keyframe
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(8px)}}';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>

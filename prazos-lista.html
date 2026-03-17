@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lexis — Prazos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:0 0% 97%;--fg:0 0% 9%;--card:0 0% 100%;--primary:0 0% 18%;
+  --primary-fg:0 0% 98%;--muted:0 0% 96%;--muted-fg:0 0% 45%;--accent:33 60% 50%;
+  --border:0 0% 83%;--ring:33 60% 50%;--radius:0.375rem;
+  --success:142 71% 45%;--success-bg:142 77% 97%;--success-border:142 60% 75%;--success-fg:142 71% 25%;
+  --warning:38 92% 50%;--warning-bg:48 100% 96%;--warning-border:38 80% 68%;--warning-fg:33 88% 28%;
+  --error:0 84% 60%;--error-bg:0 100% 97%;--error-border:0 84% 75%;--error-fg:0 72% 35%;
+  --info:199 89% 48%;--info-bg:204 100% 97%;--info-border:199 80% 72%;--info-fg:199 89% 26%;
+  --sb-bg:0 0% 11%;--sb-fg:0 0% 95%;--sb-muted:0 0% 40%;--sb-border:0 0% 17%;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-serif:'DM Serif Display',Georgia,serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --sh-xs:0 1px 2px 0 rgb(0 0 0/.05);
+  --sh-sm:0 1px 3px 0 rgb(0 0 0/.07),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-md:0 4px 6px -1px rgb(0 0 0/.07),0 2px 4px -2px rgb(0 0 0/.04);
+  --sh-lg:0 10px 15px -3px rgb(0 0 0/.09),0 4px 6px -4px rgb(0 0 0/.05);
+  --sh-focus:0 0 0 3px hsl(33 60% 50%/.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:hsl(var(--fg));background:hsl(var(--bg));display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+*{scrollbar-width:thin;scrollbar-color:hsl(var(--border)) transparent;}
+*::-webkit-scrollbar{width:4px;height:4px;}
+*::-webkit-scrollbar-thumb{background:hsl(var(--border));border-radius:4px;}
+svg{display:block;}
+:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:500;line-height:1;cursor:pointer;border:none;transition:all 150ms;white-space:nowrap;text-decoration:none;font-family:var(--font-sans);outline:none;}
+.btn:focus-visible{box-shadow:var(--sh-focus);}
+.btn-xs{height:26px;padding:0 8px;font-size:11px;border-radius:calc(var(--radius) - 1px);}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;}
+.btn-md{height:34px;padding:0 14px;}
+.btn-icon{width:30px;height:30px;padding:0;flex-shrink:0;}
+.btn-icon-sm{width:26px;height:26px;padding:0;flex-shrink:0;border-radius:calc(var(--radius) - 1px);}
+.btn-default{background:hsl(var(--primary));color:hsl(var(--primary-fg));}
+.btn-default:hover{background:hsl(0 0% 23%);}
+.btn-outline{background:transparent;color:hsl(var(--fg));border:1px solid hsl(var(--border));}
+.btn-outline:hover{background:hsl(var(--muted));}
+.btn-ghost{background:transparent;color:hsl(var(--muted-fg));border:none;}
+.btn-ghost:hover{background:hsl(var(--muted));color:hsl(var(--fg));}
+.btn-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.btn-success:hover{background:hsl(142 77% 93%);}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;line-height:1;white-space:nowrap;}
+.badge-pill{padding:3px 8px;border-radius:999px;border:1px solid;}
+.badge-tag{padding:2px 7px;border-radius:var(--radius);border:1px solid;}
+.badge-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border-color:hsl(var(--error-border));}
+.badge-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border-color:hsl(var(--warning-border));}
+.badge-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border-color:hsl(var(--success-border));}
+.badge-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));border-color:hsl(var(--border));}
+.badge-info{background:hsl(var(--info-bg));color:hsl(var(--info-fg));border-color:hsl(var(--info-border));}
+.badge-accent{background:hsl(var(--accent)/.12);color:hsl(var(--accent));border-color:hsl(var(--accent)/.3);}
+
+/* ── Sidebar ── */
+.sidebar{width:220px;min-height:100vh;background:hsl(var(--sb-bg));display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid hsl(var(--sb-border));position:relative;overflow:hidden;}
+.sidebar::before{content:'';position:absolute;width:260px;height:260px;background:radial-gradient(circle,hsl(33 60% 50%/.14) 0%,transparent 70%);top:-60px;right:-80px;pointer-events:none;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:18px 16px 16px;border-bottom:1px solid hsl(var(--sb-border));}
+.logo-orb{width:30px;height:30px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,hsl(var(--accent)),hsl(33 60% 36%));box-shadow:0 0 0 1px hsl(33 60% 50%/.3);}
+.logo-name{font-family:var(--font-serif);font-size:15px;letter-spacing:.1em;color:hsl(var(--sb-fg));display:block;}
+.logo-sub{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--accent));display:block;margin-top:1px;}
+.nav-sec{padding:12px 8px 4px;}
+.nav-label{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--sb-muted));padding:0 8px;margin-bottom:4px;display:block;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:calc(var(--radius) - 1px);color:hsl(0 0% 58%);font-size:13px;font-weight:450;cursor:pointer;transition:background 150ms,color 150ms;text-decoration:none;}
+.nav-item:hover{background:hsl(0 0% 100%/.05);color:hsl(var(--sb-fg));}
+.nav-item.active{background:hsl(33 60% 50%/.13);color:hsl(var(--accent));}
+.nav-item.active .nav-icon{opacity:1;}
+.nav-icon{width:15px;height:15px;flex-shrink:0;opacity:.7;}
+.nav-badge{margin-left:auto;background:hsl(var(--error));color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center;}
+.nav-badge.am{background:hsl(var(--accent));}
+.sb-sep{height:1px;background:hsl(var(--sb-border));margin:6px 8px;}
+.sb-spacer{flex:1;}
+.sb-footer{padding:10px 8px;border-top:1px solid hsl(var(--sb-border));}
+.avatar{border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;font-family:var(--font-sans);}
+.avatar-xs{width:22px;height:22px;font-size:9px;}
+.avatar-sm{width:28px;height:28px;font-size:11px;}
+.avatar-md{width:32px;height:32px;font-size:12px;}
+.av-rf{background:linear-gradient(135deg,hsl(199 89% 48%),hsl(199 89% 30%));color:#fff;}
+.av-am{background:linear-gradient(135deg,hsl(33 70% 50%),hsl(33 70% 36%));color:#fff;}
+.av-mc{background:linear-gradient(135deg,hsl(270 60% 55%),hsl(270 60% 40%));color:#fff;}
+.user-row{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--radius);cursor:pointer;}
+.user-row:hover{background:hsl(0 0% 100%/.05);}
+.user-name{font-size:12px;font-weight:500;color:hsl(var(--sb-fg));}
+.user-role{font-size:10px;color:hsl(var(--sb-muted));}
+
+/* ── Layout ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:48px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;}
+.topbar-left{flex:1;display:flex;align-items:center;gap:10px;}
+.page-title{font-family:var(--font-serif);font-size:17px;color:hsl(var(--fg));}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:hsl(var(--success-fg));background:hsl(var(--success-bg));border:1px solid hsl(var(--success-border));padding:3px 10px;border-radius:20px;}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:hsl(var(--success));animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── KPI Strip ── */
+.kpi-strip{display:flex;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.kpi-cell{flex:1;padding:11px 18px;border-right:1px solid hsl(var(--border));display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 130ms;}
+.kpi-cell:last-child{border-right:none;}
+.kpi-cell:hover{background:hsl(var(--muted));}
+.kpi-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ki-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));}
+.ki-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));}
+.ki-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));}
+.ki-secondary{background:hsl(var(--muted));color:hsl(var(--muted-fg));}
+.kpi-num{font-family:var(--font-serif);font-size:20px;line-height:1;color:hsl(var(--fg));}
+.kpi-desc{font-size:10.5px;color:hsl(var(--muted-fg));margin-top:1px;}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 20px;background:hsl(var(--card));border-bottom:1px solid hsl(var(--border));flex-shrink:0;}
+.search-wrap{position:relative;flex:1;max-width:320px;}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:hsl(var(--muted-fg));pointer-events:none;}
+.search-input{width:100%;height:32px;padding:0 10px 0 32px;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;transition:border-color 150ms,box-shadow 150ms;}
+.search-input::placeholder{color:hsl(var(--muted-fg));}
+.search-input:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.filter-select{height:32px;padding:0 28px 0 10px;border:1px solid hsl(var(--border));border-radius:var(--radius);font-size:12px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color 150ms;}
+.filter-select:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.toolbar-sep{width:1px;height:20px;background:hsl(var(--border));flex-shrink:0;}
+.toolbar-right{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.result-count{font-size:12px;color:hsl(var(--muted-fg));white-space:nowrap;}
+
+/* ── Conteúdo principal ── */
+.content{flex:1;overflow-y:auto;padding:0 0 80px;}
+
+/* ── Grupo de urgência ── */
+.urgency-group{margin-bottom:2px;}
+
+.group-header{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px 8px;
+  position:sticky;top:0;z-index:10;
+  background:hsl(var(--bg));
+  border-bottom:1px solid hsl(var(--border));
+  cursor:pointer;
+  user-select:none;
+}
+.group-header:hover .group-toggle{opacity:1;}
+
+.group-stripe{width:3px;height:18px;border-radius:2px;flex-shrink:0;}
+.gs-error{background:hsl(var(--error));}
+.gs-warning{background:hsl(var(--warning));}
+.gs-success{background:hsl(var(--success));}
+.gs-muted{background:hsl(var(--muted-fg));}
+
+.group-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.gl-error{color:hsl(var(--error-fg));}
+.gl-warning{color:hsl(var(--warning-fg));}
+.gl-success{color:hsl(var(--success-fg));}
+.gl-muted{color:hsl(var(--muted-fg));}
+
+.group-count{font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;}
+.gc-error{background:hsl(var(--error-bg));color:hsl(var(--error-fg));border:1px solid hsl(var(--error-border));}
+.gc-warning{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+.gc-success{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.gc-muted{background:hsl(var(--muted));color:hsl(var(--muted-fg));border:1px solid hsl(var(--border));}
+
+.group-toggle{width:16px;height:16px;color:hsl(var(--muted-fg));opacity:.5;transition:transform 200ms,opacity 150ms;margin-left:auto;}
+.group-collapsed .group-toggle{transform:rotate(-90deg);}
+.group-collapsed .group-items{display:none;}
+
+/* ── Prazo item ── */
+.prazo-item{
+  display:flex;align-items:stretch;
+  background:hsl(var(--card));
+  border-bottom:1px solid hsl(var(--border)/.7);
+  transition:background 130ms;
+  position:relative;
+  animation:fadeUp .2s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.prazo-item:hover{background:hsl(var(--muted));}
+.prazo-item.is-done{opacity:.58;}
+.prazo-item.is-done .prazo-titulo{text-decoration:line-through;color:hsl(var(--muted-fg));}
+
+/* Borda esquerda colorida */
+.prazo-left-border{width:3px;flex-shrink:0;}
+.plb-error{background:hsl(var(--error));}
+.plb-warning{background:hsl(var(--warning));}
+.plb-success{background:hsl(var(--success));}
+.plb-muted{background:hsl(var(--border));}
+
+/* Date box */
+.prazo-date{
+  width:56px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px 0;
+  border-right:1px solid hsl(var(--border)/.5);
+}
+.pd-day{font-family:var(--font-serif);font-size:22px;line-height:1;color:hsl(var(--fg));}
+.pd-month{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:hsl(var(--muted-fg));margin-top:1px;}
+.pd-year{font-size:9px;color:hsl(var(--muted-fg));opacity:.6;margin-top:1px;}
+
+/* Item core */
+.prazo-core{flex:1;padding:12px 14px 12px 16px;min-width:0;display:flex;flex-direction:column;gap:5px;}
+
+.prazo-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.prazo-titulo{font-size:13.5px;font-weight:600;color:hsl(var(--fg));flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prazo-origem{display:flex;align-items:center;gap:4px;}
+
+.prazo-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.prazo-processo-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11.5px;font-weight:500;color:hsl(var(--accent));
+  text-decoration:none;transition:opacity 150ms;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;
+}
+.prazo-processo-link:hover{opacity:.7;text-decoration:underline;}
+.prazo-cnj{font-family:var(--font-mono);font-size:10px;color:hsl(var(--muted-fg));}
+.meta-sep{color:hsl(var(--border));font-size:13px;}
+.prazo-tribunal{font-size:11px;color:hsl(var(--muted-fg));}
+
+.prazo-bottom{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.prazo-descricao{font-size:12px;color:hsl(var(--muted-fg));flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Anotação inline */
+.prazo-nota{
+  display:flex;align-items:flex-start;gap:6px;
+  background:hsl(var(--accent)/.06);
+  border:1px solid hsl(var(--accent)/.2);
+  border-radius:calc(var(--radius) - 1px);
+  padding:6px 10px;
+  font-size:11.5px;color:hsl(var(--fg));
+  margin-top:2px;
+  line-height:1.45;
+}
+.nota-icon{flex-shrink:0;color:hsl(var(--accent));margin-top:1px;}
+
+/* Responsável */
+.prazo-resp{display:flex;align-items:center;gap:5px;font-size:11px;color:hsl(var(--muted-fg));white-space:nowrap;}
+
+/* Ações inline */
+.prazo-actions{
+  display:flex;align-items:center;gap:4px;
+  padding:0 14px 0 0;
+  flex-shrink:0;
+  opacity:0;
+  transition:opacity 150ms;
+}
+.prazo-item:hover .prazo-actions{opacity:1;}
+.prazo-item.is-done .prazo-actions{opacity:1;}
+
+/* ── Modal de anotação / edição (genérico) ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1050;animation:fadeIn .15s ease;
+}
+.modal-overlay.hidden{display:none;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.modal{
+  background:hsl(var(--card));border-radius:calc(var(--radius) + 2px);
+  box-shadow:var(--sh-lg);width:100%;max-width:440px;
+  margin:0 16px;overflow:hidden;
+  animation:slideUp .18s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid hsl(var(--border));
+}
+.modal-title{font-size:14px;font-weight:600;color:hsl(var(--fg));}
+.modal-body{padding:20px;}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid hsl(var(--border));}
+
+.form-label{font-size:11.5px;font-weight:600;color:hsl(var(--muted-fg));margin-bottom:6px;display:block;letter-spacing:.02em;}
+.form-input{
+  width:100%;height:34px;padding:0 10px;
+  border:1px solid hsl(var(--border));border-radius:var(--radius);
+  font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));
+  outline:none;transition:border-color 150ms,box-shadow 150ms;
+}
+.form-input:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.form-textarea{
+  width:100%;padding:8px 10px;min-height:80px;resize:vertical;
+  border:1px solid hsl(var(--border));border-radius:var(--radius);
+  font-size:13px;font-family:var(--font-sans);background:hsl(var(--bg));color:hsl(var(--fg));
+  outline:none;transition:border-color 150ms,box-shadow 150ms;line-height:1.5;
+}
+.form-textarea:focus{border-color:hsl(var(--accent));box-shadow:var(--sh-focus);}
+.form-group{margin-bottom:14px;}
+.form-group:last-child{margin-bottom:0;}
+
+/* Responsável selector (mini) */
+.resp-options{display:flex;flex-direction:column;gap:4px;}
+.resp-opt{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:var(--radius);
+  cursor:pointer;border:1px solid hsl(var(--border));
+  transition:all 130ms;background:transparent;text-align:left;font-family:var(--font-sans);
+}
+.resp-opt:hover{background:hsl(var(--muted));}
+.resp-opt.selected{border-color:hsl(var(--accent)/.4);background:hsl(var(--accent)/.07);}
+.resp-name{font-size:13px;font-weight:500;color:hsl(var(--fg));}
+.resp-role{font-size:11px;color:hsl(var(--muted-fg));}
+.resp-badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;}
+.rb-ok{background:hsl(var(--success-bg));color:hsl(var(--success-fg));border:1px solid hsl(var(--success-border));}
+.rb-warn{background:hsl(var(--warning-bg));color:hsl(var(--warning-fg));border:1px solid hsl(var(--warning-border));}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  background:hsl(var(--fg));color:hsl(var(--bg));
+  padding:10px 18px;border-radius:999px;
+  font-size:12.5px;font-weight:500;
+  box-shadow:var(--sh-lg);
+  animation:toastIn .2s ease;z-index:2000;
+  display:flex;align-items:center;gap:7px;
+}
+.toast.hidden{display:none;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* Empty state */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;text-align:center;gap:12px;}
+.empty-icon{width:44px;height:44px;border-radius:12px;background:hsl(var(--muted));display:flex;align-items:center;justify-content:center;color:hsl(var(--muted-fg));}
+.empty-title{font-size:14px;font-weight:600;color:hsl(var(--fg));}
+.empty-sub{font-size:13px;color:hsl(var(--muted-fg));max-width:280px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="logo-orb"></div>
+    <div><span class="logo-name">LEXIS</span><span class="logo-sub">Escritório Digital</span></div>
+  </div>
+  <nav class="nav-sec">
+    <span class="nav-label">Principal</span>
+    <a class="nav-item" href="dashboard.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6L7.5 1.5 13.5 6V13A.5.5 0 0113 13.5H9.5V10H5.5V13.5H2A.5.5 0 011.5 13V6Z"/></svg>
+      Início
+    </a>
+    <a class="nav-item" href="processos-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="12" height="12" rx="1.5"/><path d="M4.5 7.5h6M4.5 5h3M4.5 10h4.5"/></svg>
+      Processos
+      <span class="nav-badge am">47</span>
+    </a>
+    <a class="nav-item active" href="prazos-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r="6"/><path d="M7.5 4.5V8l2 2"/></svg>
+      Prazos
+      <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item" href="intimacoes-lista.html">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10.5V4.5a2 2 0 00-2-2h-6a2 2 0 00-2 2v6l-1 2H13.5l-1-2z"/><path d="M5.5 13.5h4"/></svg>
+      Intimações
+      <span class="nav-badge">8</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="12" height="11" rx="1.5"/><path d="M4.5 1.5v2M10.5 1.5v2M1.5 6.5h12"/></svg>
+      Agenda
+    </a>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h10M2.5 7.5H9M2.5 11h5"/></svg>
+      Tarefas
+      <span class="nav-badge am">5</span>
+    </a>
+  </nav>
+  <div class="sb-sep"></div>
+  <nav class="nav-sec">
+    <span class="nav-label">Sistema</span>
+    <a class="nav-item" href="#">
+      <svg class="nav-icon" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.5"/><path d="M7.5 1v2M7.5 12v2M1 7.5h2M12 7.5h2"/></svg>
+      Configurações
+    </a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-footer">
+    <div class="user-row">
+      <div class="avatar avatar-sm av-rf">RF</div>
+      <div>
+        <p class="user-name">Dr. Rafael Fontes</p>
+        <p class="user-role">Advogado · OAB/SP 123.456</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <p class="page-title">Prazos</p>
+      <span class="badge badge-tag badge-secondary" style="font-size:11px;">Minha carteira</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="sync-pill"><span class="sync-dot"></span>DJE-SP · há 8 min</div>
+      <button class="btn btn-ghost btn-icon" aria-label="Notificações" style="position:relative;">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5a5 5 0 00-5 5v2.5l-1 1.5h12l-1-1.5V6.5a5 5 0 00-5-5z"/><path d="M6 12.5a1.5 1.5 0 003 0"/></svg>
+        <span style="position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:hsl(var(--error));border:1.5px solid hsl(var(--card));"></span>
+      </button>
+      <div class="avatar avatar-md av-rf" style="cursor:pointer;">RF</div>
+    </div>
+  </header>
+
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-error">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1.5L1 12.5h12L7 1.5z"/><path d="M7 5.5v3"/><circle cx="7" cy="10" r=".6" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num" style="color:hsl(var(--error-fg));">3</div>
+        <div class="kpi-desc">Vencidos ou hoje</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-warning">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3.5l1.5 1.5"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num" style="color:hsl(var(--warning-fg));">5</div>
+        <div class="kpi-desc">Esta semana (1–7 dias)</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-success">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3.5-4"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num" style="color:hsl(var(--success-fg));">4</div>
+        <div class="kpi-desc">Com folga (&gt; 7 dias)</div>
+      </div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-icon ki-secondary">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 7l2 2 3.5-4"/><circle cx="7" cy="7" r="5.5"/></svg>
+      </div>
+      <div>
+        <div class="kpi-num">8</div>
+        <div class="kpi-desc">Cumpridos este mês</div>
+      </div>
+    </div>
+    <div class="kpi-cell" style="border-right:none;">
+      <div class="kpi-icon" style="background:hsl(var(--accent)/.1);color:hsl(var(--accent));">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M7 1v12M1 7h12"/></svg>
+      </div>
+      <div>
+        <button class="btn btn-default btn-sm" style="font-size:11.5px;" onclick="showToast('Novo prazo criado')">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M5.5 1v9M1 5.5h9"/></svg>
+          Novo prazo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><path d="M10 10l2.5 2.5"/></svg>
+      <input class="search-input" type="text" placeholder="Buscar por processo, tipo ou descrição…" id="searchInput" oninput="applyFilters()"/>
+    </div>
+    <div class="toolbar-sep"></div>
+    <select class="filter-select" id="filterOrigem" onchange="applyFilters()">
+      <option value="">Origem: todos</option>
+      <option value="automatico">Automático (intimação)</option>
+      <option value="manual">Manual</option>
+    </select>
+    <select class="filter-select" id="filterTribunal" onchange="applyFilters()">
+      <option value="">Tribunal: todos</option>
+      <option value="TJSP">TJSP</option>
+      <option value="TRF">TRF</option>
+      <option value="TST">TST</option>
+    </select>
+    <div class="toolbar-sep"></div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:hsl(var(--muted-fg));cursor:pointer;">
+      <input type="checkbox" id="showDone" onchange="applyFilters()" style="accent-color:hsl(var(--accent));width:14px;height:14px;"/>
+      Mostrar cumpridos
+    </label>
+    <div class="toolbar-right">
+      <span class="result-count" id="resultCount">12 prazos pendentes</span>
+    </div>
+  </div>
+
+  <!-- Lista agrupada -->
+  <div class="content" id="contentArea">
+
+    <!-- ══ GRUPO: VENCIDOS ══ -->
+    <div class="urgency-group" id="group-vencido">
+      <div class="group-header" onclick="toggleGroup('group-vencido')">
+        <div class="group-stripe gs-error"></div>
+        <span class="group-label gl-error">Vencidos</span>
+        <span class="group-count gc-error" id="cnt-vencido">1 prazo</span>
+        <svg class="group-toggle" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5L7.5 9.5L11.5 5.5"/></svg>
+      </div>
+      <div class="group-items">
+
+        <!-- PRAZO V1 — Vencido, automático -->
+        <div class="prazo-item" data-urgency="vencido" data-origem="automatico" data-tribunal="TRF" data-done="false">
+          <div class="prazo-left-border plb-error"></div>
+          <div class="prazo-date">
+            <span class="pd-day" style="color:hsl(var(--error-fg));">26</span>
+            <span class="pd-month">FEV</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Contestação — prazo vencido</span>
+              <div class="prazo-origem">
+                <span class="badge badge-tag badge-error" style="font-size:10px;">Vencido há 3 dias</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Industriex S/A × União Federal
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0009871-44.2024.4.03.6100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TRF 3ª Região</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Intimação publicada em 12/02/2026 no DJE-SP — 15 dias corridos para contestar</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)" title="Marcar como cumprido">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Adicionar anotação">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /group vencido -->
+
+    <!-- ══ GRUPO: HOJE ══ -->
+    <div class="urgency-group" id="group-hoje">
+      <div class="group-header" onclick="toggleGroup('group-hoje')">
+        <div class="group-stripe gs-error"></div>
+        <span class="group-label gl-error">Vencem hoje</span>
+        <span class="group-count gc-error" id="cnt-hoje">2 prazos</span>
+        <svg class="group-toggle" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5L7.5 9.5L11.5 5.5"/></svg>
+      </div>
+      <div class="group-items">
+
+        <!-- PRAZO H1 — Hoje, automático -->
+        <div class="prazo-item" data-urgency="hoje" data-origem="automatico" data-tribunal="TJSP" data-done="false">
+          <div class="prazo-left-border plb-error"></div>
+          <div class="prazo-date">
+            <span class="pd-day" style="color:hsl(var(--error-fg));">01</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Contestação</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-error" style="font-size:10px;">Hoje · 23:59</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Silva &amp; Construções Ltda. × Banco Nacional
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0001234-56.2024.8.26.0100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TJSP</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Intimação via DJE-SP em 15/02/2026 — 15 dias corridos para apresentar contestação</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)" title="Marcar como cumprido">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Adicionar anotação">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- PRAZO H2 — Hoje, manual -->
+        <div class="prazo-item" data-urgency="hoje" data-origem="manual" data-tribunal="TST" data-done="false">
+          <div class="prazo-left-border plb-error"></div>
+          <div class="prazo-date">
+            <span class="pd-day" style="color:hsl(var(--error-fg));">01</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Recurso Ordinário</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-error" style="font-size:10px;">Hoje · 23:59</span>
+                <span class="badge badge-tag badge-accent" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4.5 1v7M1.5 5l3 3 3-3"/></svg>
+                  Manual
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                João Pereira × Telecom Express S/A
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0009876-11.2023.8.26.0100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TST</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Prazo criado manualmente em 21/02/2026 — 8 dias corridos para razões de recurso</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+            <div class="prazo-nota">
+              <svg class="nota-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 5h4M4 7h2"/></svg>
+              Verificar com o cliente se há documentos adicionais antes de protocolar.
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)" title="Marcar como cumprido">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Adicionar anotação">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg>
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /group hoje -->
+
+    <!-- ══ GRUPO: ESTA SEMANA ══ -->
+    <div class="urgency-group" id="group-semana">
+      <div class="group-header" onclick="toggleGroup('group-semana')">
+        <div class="group-stripe gs-warning"></div>
+        <span class="group-label gl-warning">Esta semana</span>
+        <span class="group-count gc-warning" id="cnt-semana">3 prazos</span>
+        <svg class="group-toggle" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5L7.5 9.5L11.5 5.5"/></svg>
+      </div>
+      <div class="group-items">
+
+        <!-- PRAZO S1 -->
+        <div class="prazo-item" data-urgency="semana" data-origem="automatico" data-tribunal="TJSP" data-done="false">
+          <div class="prazo-left-border plb-warning"></div>
+          <div class="prazo-date">
+            <span class="pd-day">04</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Manifestação sobre laudo pericial</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-warning" style="font-size:10px;">3 dias</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Comércio Rápido Ltda. × Fornecedor ABC
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0005512-88.2023.8.26.0100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TJSP</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Despacho de 26/02/2026 — determinada manifestação sobre laudo do perito nomeado</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Adicionar anotação"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg></button>
+          </div>
+        </div>
+
+        <!-- PRAZO S2 -->
+        <div class="prazo-item" data-urgency="semana" data-origem="manual" data-tribunal="TJSP" data-done="false">
+          <div class="prazo-left-border plb-warning"></div>
+          <div class="prazo-date">
+            <span class="pd-day">05</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Réplica à contestação</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-warning" style="font-size:10px;">4 dias</span>
+                <span class="badge badge-tag badge-accent" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4.5 1v7M1.5 5l3 3 3-3"/></svg>
+                  Manual
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Ana Beatriz Santos × Condomínio Residencial
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0004456-33.2024.8.26.0050</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TJSP</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Prazo criado manualmente — 15 dias úteis para réplica à contestação protocolada pelo réu</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-am">AM</div>
+                Dra. Adriana Melo
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Anotação"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg></button>
+          </div>
+        </div>
+
+        <!-- PRAZO S3 -->
+        <div class="prazo-item" data-urgency="semana" data-origem="automatico" data-tribunal="TRF" data-done="false">
+          <div class="prazo-left-border plb-warning"></div>
+          <div class="prazo-date">
+            <span class="pd-day">07</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Contrarrazões de apelação</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-warning" style="font-size:10px;">6 dias</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Construtora Nova Era × Município de São Paulo
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0001199-77.2022.8.26.0100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TRF 3ª Região</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Intimação de 02/02/2026 — 15 dias úteis para contrarrazões da apelação do réu</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Anotação"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg></button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /group semana -->
+
+    <!-- ══ GRUPO: COM FOLGA ══ -->
+    <div class="urgency-group" id="group-folga">
+      <div class="group-header" onclick="toggleGroup('group-folga')">
+        <div class="group-stripe gs-success"></div>
+        <span class="group-label gl-success">Com folga — mais de 7 dias</span>
+        <span class="group-count gc-success" id="cnt-folga">4 prazos</span>
+        <svg class="group-toggle" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5L7.5 9.5L11.5 5.5"/></svg>
+      </div>
+      <div class="group-items">
+
+        <div class="prazo-item" data-urgency="folga" data-origem="automatico" data-tribunal="TRF" data-done="false">
+          <div class="prazo-left-border plb-success"></div>
+          <div class="prazo-date">
+            <span class="pd-day">18</span>
+            <span class="pd-month">MAR</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Apelação — razões recursais</span>
+              <div class="prazo-origem">
+                <span class="badge badge-pill badge-success" style="font-size:10px;">17 dias</span>
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:3px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4.5" cy="4.5" r="3.5"/><path d="M4.5 2.5v2l1 1"/></svg>
+                  Automático
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Construtora Nova Era × Município de SP
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-cnj">0001199-77.2022.8.26.0100</span>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TRF 3ª Região</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Sentença de 28/01/2026 — 15 dias úteis para interpor apelação</span>
+              <div class="prazo-resp">
+                <div class="avatar avatar-xs av-rf">RF</div>
+                Dr. Rafael Fontes
+              </div>
+            </div>
+          </div>
+          <div class="prazo-actions">
+            <button class="btn btn-success btn-xs" onclick="markDone(this)">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+              Cumprir
+            </button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Anotação"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg></button>
+            <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Prazo cumprido (oculto por default) -->
+        <div class="prazo-item is-done" data-urgency="cumprido" data-origem="automatico" data-tribunal="TJSP" data-done="true" style="display:none;">
+          <div class="prazo-left-border plb-muted"></div>
+          <div class="prazo-date">
+            <span class="pd-day" style="color:hsl(var(--muted-fg));">22</span>
+            <span class="pd-month">FEV</span>
+            <span class="pd-year">2026</span>
+          </div>
+          <div class="prazo-core">
+            <div class="prazo-top">
+              <span class="prazo-titulo">Petição simples</span>
+              <div class="prazo-origem">
+                <span class="badge badge-tag badge-secondary" style="font-size:10px;gap:4px;">
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 4.5l2.5 2.5 3.5-4"/></svg>
+                  Cumprido em 20/02/2026
+                </span>
+              </div>
+            </div>
+            <div class="prazo-meta">
+              <a class="prazo-processo-link" href="processo-detalhe.html">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="8" height="8" rx="1"/><path d="M3 5h4M3 3.5h2"/></svg>
+                Espólio de Maria Costa × Herdeiros
+              </a>
+              <span class="meta-sep">·</span>
+              <span class="prazo-tribunal">TJSP · Vara de Família</span>
+            </div>
+            <div class="prazo-bottom">
+              <span class="prazo-descricao">Petição simples para juntada de documentos</span>
+            </div>
+          </div>
+          <div class="prazo-actions" style="opacity:1;">
+            <button class="btn btn-ghost btn-xs" onclick="undoDone(this)" title="Desfazer">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 4H7a3 3 0 010 6H4"/><path d="M3.5 2L1.5 4l2 2"/></svg>
+              Desfazer
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /group folga -->
+
+  </div><!-- /content -->
+</main>
+
+<!-- ══ MODAL: ANOTAÇÃO ══ -->
+<div class="modal-overlay hidden" id="modalNota" onclick="closeModalOnOverlay(event,'modalNota')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="notaTitle">
+    <div class="modal-header">
+      <span class="modal-title" id="notaTitle">Adicionar anotação</span>
+      <button class="btn btn-ghost btn-icon-sm" onclick="closeModal('modalNota')">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l9 9M11 2L2 11"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Prazo</label>
+        <div style="font-size:13px;font-weight:500;color:hsl(var(--fg));" id="notaPrazoLabel">—</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="notaTextarea">Anotação</label>
+        <textarea class="form-textarea" id="notaTextarea" placeholder="Descreva observações, pendências ou instruções para este prazo…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modalNota')">Cancelar</button>
+      <button class="btn btn-default btn-sm" onclick="saveNota()">Salvar anotação</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: EDITAR DATA ══ -->
+<div class="modal-overlay hidden" id="modalEdit" onclick="closeModalOnOverlay(event,'modalEdit')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="modal-header">
+      <span class="modal-title" id="editTitle">Editar prazo</span>
+      <button class="btn btn-ghost btn-icon-sm" onclick="closeModal('modalEdit')">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l9 9M11 2L2 11"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="editData">Nova data de vencimento</label>
+        <input type="date" class="form-input" id="editData" value="2026-03-01"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="editMotivo">Motivo da alteração</label>
+        <input type="text" class="form-input" id="editMotivo" placeholder="Ex: Acordo de prorrogação entre partes"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modalEdit')">Cancelar</button>
+      <button class="btn btn-default btn-sm" onclick="saveEdit()">Salvar alteração</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: REATRIBUIR ══ -->
+<div class="modal-overlay hidden" id="modalReatrib" onclick="closeModalOnOverlay(event,'modalReatrib')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reatribTitle">
+    <div class="modal-header">
+      <span class="modal-title" id="reatribTitle">Reatribuir prazo</span>
+      <button class="btn btn-ghost btn-icon-sm" onclick="closeModal('modalReatrib')">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 2l9 9M11 2L2 11"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Atribuir para</label>
+        <div class="resp-options">
+          <button class="resp-opt selected" onclick="selectResp(this)">
+            <div class="avatar avatar-sm av-rf">RF</div>
+            <div>
+              <div class="resp-name">Dr. Rafael Fontes</div>
+              <div class="resp-role">Advogado · OAB/SP 123.456</div>
+            </div>
+            <span class="resp-badge rb-ok">Carga 62%</span>
+          </button>
+          <button class="resp-opt" onclick="selectResp(this)">
+            <div class="avatar avatar-sm av-am">AM</div>
+            <div>
+              <div class="resp-name">Dra. Adriana Melo</div>
+              <div class="resp-role">Advogada · OAB/SP 234.567</div>
+            </div>
+            <span class="resp-badge rb-ok">Carga 48%</span>
+          </button>
+          <button class="resp-opt" onclick="selectResp(this)">
+            <div class="avatar avatar-sm av-mc">MC</div>
+            <div>
+              <div class="resp-name">Dr. Marcos Carvalho</div>
+              <div class="resp-role">Advogado · OAB/SP 345.678</div>
+            </div>
+            <span class="resp-badge rb-warn">Carga 85%</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modalReatrib')">Cancelar</button>
+      <button class="btn btn-default btn-sm" onclick="saveReatrib()">Confirmar reatribuição</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast">
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 6.5l3 3 6-6"/></svg>
+  <span id="toastMsg">Ação realizada</span>
+</div>
+
+<!-- Prototype nav bar -->
+<style>
+.proto-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:hsl(0 0% 9%);border:1px solid hsl(0 0% 20%);border-radius:40px;padding:6px 8px;display:flex;align-items:center;gap:4px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:9999;font-family:"Inter",-apple-system,sans-serif;}
+.proto-nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:hsl(0 0% 35%);padding:0 8px 0 4px;border-right:1px solid hsl(0 0% 18%);margin-right:4px;white-space:nowrap;}
+.proto-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;text-decoration:none;font-size:11px;font-weight:500;color:hsl(0 0% 60%);transition:all 150ms;white-space:nowrap;border:1px solid transparent;}
+.proto-btn:hover{background:hsl(0 0% 16%);color:#f2f2f2;border-color:hsl(0 0% 22%);}
+.proto-btn.proto-active{background:hsl(33 60% 50%/.15);color:hsl(33 60% 65%);border-color:hsl(33 60% 50%/.3);}
+.proto-sep{width:1px;height:16px;background:hsl(0 0% 18%);margin:0 2px;flex-shrink:0;}
+</style>
+<nav class="proto-nav">
+  <span class="proto-nav-label">Lexis MVP</span>
+  <a class="proto-btn" href="index.html"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5L5.5 1.5 10 5.5V10H7V7.5H4V10H1V5.5Z"/></svg>Início</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="dashboard.html">Dashboard Adv.</a>
+  <a class="proto-btn" href="dashboard-gestor.html">Dashboard Gestor</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="processos-lista.html">Processos</a>
+  <a class="proto-btn" href="processo-detalhe.html">Detalhe</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn proto-active" href="prazos-lista.html">Prazos</a>
+  <a class="proto-btn" href="intimacoes-lista.html">Intimações</a>
+  <span class="proto-sep">·</span>
+  <a class="proto-btn" href="equipe-gestao.html">Equipe</a>
+</nav>
+
+<script>
+// ── Grupo collapsible ──
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('group-collapsed');
+}
+
+// ── Mark done ──
+function markDone(btn) {
+  const item = btn.closest('.prazo-item');
+  item.classList.add('is-done');
+  item.dataset.done = 'true';
+  item.dataset.urgency = 'cumprido';
+  // Swap action button to "undo"
+  const actionsDiv = item.querySelector('.prazo-actions');
+  actionsDiv.style.opacity = '1';
+  actionsDiv.innerHTML = `
+    <button class="btn btn-ghost btn-xs" onclick="undoDone(this)" title="Desfazer">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1.5 4H7a3 3 0 010 6H4"/><path d="M3.5 2L1.5 4l2 2"/></svg>
+      Desfazer
+    </button>`;
+  showToast('Prazo marcado como cumprido ✓');
+  applyFilters();
+}
+
+function undoDone(btn) {
+  const item = btn.closest('.prazo-item');
+  item.classList.remove('is-done');
+  item.dataset.done = 'false';
+  // Restore original urgency — simplification: set to 'folga'
+  item.dataset.urgency = 'folga';
+  const actionsDiv = item.querySelector('.prazo-actions');
+  actionsDiv.style.opacity = '';
+  actionsDiv.innerHTML = `
+    <button class="btn btn-success btn-xs" onclick="markDone(this)">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M2 5.5l2.5 2.5 4.5-4.5"/></svg>
+      Cumprir
+    </button>
+    <button class="btn btn-ghost btn-icon-sm" onclick="openEditModal(this)" title="Editar data"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8.5 1.5l2 2L4 10H2v-2L8.5 1.5z"/></svg></button>
+    <button class="btn btn-ghost btn-icon-sm" onclick="openNoteModal(this)" title="Anotação"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 6h4M4 4h2"/></svg></button>
+    <button class="btn btn-ghost btn-icon-sm" onclick="openReatribModal(this)" title="Reatribuir"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="4.5" cy="3.5" r="1.5"/><path d="M1.5 9.5c0-1.7 1.3-3 3-3"/><path d="M8 6.5v4M6 8.5h4"/></svg></button>`;
+  showToast('Cumprimento desfeito');
+  applyFilters();
+}
+
+// ── Filters ──
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const origem = document.getElementById('filterOrigem').value;
+  const tribunal = document.getElementById('filterTribunal').value.toUpperCase();
+  const showDone = document.getElementById('showDone').checked;
+
+  const items = document.querySelectorAll('.prazo-item');
+  let visible = 0;
+
+  items.forEach(item => {
+    const isDone = item.dataset.done === 'true';
+    if (isDone && !showDone) { item.style.display = 'none'; return; }
+
+    const text = item.textContent.toLowerCase();
+    const matchSearch = !search || text.includes(search);
+    const matchOrigem = !origem || item.dataset.origem === origem;
+    const matchTrib = !tribunal || item.dataset.tribunal.toUpperCase().includes(tribunal);
+
+    if (matchSearch && matchOrigem && matchTrib) {
+      item.style.display = '';
+      visible++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+
+  const pending = Array.from(items).filter(i => i.style.display !== 'none' && i.dataset.done !== 'true').length;
+  document.getElementById('resultCount').textContent =
+    pending === 1 ? '1 prazo pendente' : `${pending} prazos pendentes`;
+}
+
+// ── Modals ──
+let activeItem = null;
+
+function openNoteModal(btn) {
+  activeItem = btn.closest('.prazo-item');
+  const titulo = activeItem.querySelector('.prazo-titulo').textContent;
+  document.getElementById('notaPrazoLabel').textContent = titulo;
+  document.getElementById('notaTextarea').value = '';
+  document.getElementById('modalNota').classList.remove('hidden');
+  setTimeout(() => document.getElementById('notaTextarea').focus(), 100);
+}
+
+function openEditModal(btn) {
+  activeItem = btn.closest('.prazo-item');
+  document.getElementById('modalEdit').classList.remove('hidden');
+  setTimeout(() => document.getElementById('editData').focus(), 100);
+}
+
+function openReatribModal(btn) {
+  activeItem = btn.closest('.prazo-item');
+  document.getElementById('modalReatrib').classList.remove('hidden');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+function closeModalOnOverlay(e, id) {
+  if (e.target === document.getElementById(id)) closeModal(id);
+}
+
+function saveNota() {
+  const text = document.getElementById('notaTextarea').value.trim();
+  if (text && activeItem) {
+    // Remove existing nota if present
+    const existing = activeItem.querySelector('.prazo-nota');
+    if (existing) existing.remove();
+    // Add new nota
+    const nota = document.createElement('div');
+    nota.className = 'prazo-nota';
+    nota.innerHTML = `<svg class="nota-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5"/><path d="M4 5h4M4 7h2"/></svg>${text}`;
+    activeItem.querySelector('.prazo-core').appendChild(nota);
+  }
+  closeModal('modalNota');
+  showToast('Anotação salva');
+}
+
+function saveEdit() {
+  closeModal('modalEdit');
+  showToast('Data do prazo atualizada');
+}
+
+function saveReatrib() {
+  const selected = document.querySelector('.resp-opt.selected');
+  if (selected && activeItem) {
+    const name = selected.querySelector('.resp-name').textContent;
+    const initials = name.split(' ').filter(w => w.match(/[A-Z]/)).map(w => w[0]).slice(0,2).join('');
+    const respDiv = activeItem.querySelector('.prazo-resp');
+    if (respDiv) {
+      respDiv.innerHTML = `<div class="avatar avatar-xs av-am" style="font-size:9px;">${initials}</div>${name}`;
+    }
+  }
+  closeModal('modalReatrib');
+  showToast('Prazo reatribuído com sucesso');
+}
+
+function selectResp(btn) {
+  document.querySelectorAll('.resp-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2800);
+}
+
+// ── ESC fecha modais ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['modalNota','modalEdit','modalReatrib'].forEach(closeModal);
+  }
+});
+</script>
+</body>
+</html>
